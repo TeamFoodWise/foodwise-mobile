@@ -1,4 +1,4 @@
-package bangkit.kiki.foodwisemobile.ui.login
+package bangkit.kiki.foodwisemobile.ui.register
 
 import android.content.Intent
 import android.os.Bundle
@@ -23,11 +23,13 @@ import androidx.compose.ui.unit.sp
 import bangkit.kiki.foodwisemobile.R
 import bangkit.kiki.foodwisemobile.ui.element.CustomButton
 import bangkit.kiki.foodwisemobile.ui.element.CustomTextInput
-import bangkit.kiki.foodwisemobile.ui.register.RegisterActivity
-import bangkit.kiki.foodwisemobile.ui.theme.*
+import bangkit.kiki.foodwisemobile.ui.login.LoginActivity
+import bangkit.kiki.foodwisemobile.ui.theme.Black
+import bangkit.kiki.foodwisemobile.ui.theme.FoodwiseMobileTheme
+import bangkit.kiki.foodwisemobile.ui.theme.Green
 import bangkit.kiki.foodwisemobile.util.isEmailValid
 
-class LoginActivity : ComponentActivity() {
+class RegisterActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -36,11 +38,14 @@ class LoginActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-
-                    LoginScreen(onLoginButtonClicked = { email, password ->
-                        Log.e("LOGIN_SCREEN_EMAIL", email)
-                        Log.e("LOGIN_SCREEN_PASSWORD", password)
-                    })
+                    RegisterScreen(
+                        onLoginButtonClicked = { fullName, email, password, confirmationPassword ->
+                            Log.e("REGISTER_SCREEN_NAME", fullName)
+                            Log.e("REGISTER_SCREEN_EMAIL", email)
+                            Log.e("REGISTER_SCREEN_PW", password)
+                            Log.e("REGISTER_SCREEN_CPW", confirmationPassword)
+                        }
+                    )
                 }
             }
         }
@@ -48,11 +53,15 @@ class LoginActivity : ComponentActivity() {
 }
 
 @Composable
-fun LoginScreen(onLoginButtonClicked: (String, String) -> Unit) {
+fun RegisterScreen(onLoginButtonClicked: (String, String, String, String) -> Unit) {
+    var fullName by remember { mutableStateOf("") }
+    var fullNameErrorMessage by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var emailErrorMessage by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordErrorMessage by remember { mutableStateOf("") }
+    var confirmationPassword by remember { mutableStateOf("") }
+    var confirmationPasswordErrorMessage by remember { mutableStateOf("") }
     val context = LocalContext.current
 
     Scaffold(
@@ -77,7 +86,7 @@ fun LoginScreen(onLoginButtonClicked: (String, String) -> Unit) {
                     )
 
                     Text(
-                        text = "Login",
+                        text = "Register",
                         style = TextStyle(
                             color = Black,
                             fontSize = 32.sp,
@@ -86,6 +95,15 @@ fun LoginScreen(onLoginButtonClicked: (String, String) -> Unit) {
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
+
+                    CustomTextInput(
+                        value = fullName,
+                        onValueChange = { fullName = it },
+                        title = "Full Name",
+                        errorMessage = fullNameErrorMessage
+                    )
+
+                    Spacer(modifier = Modifier.height(6.dp))
 
                     CustomTextInput(
                         value = email,
@@ -104,18 +122,43 @@ fun LoginScreen(onLoginButtonClicked: (String, String) -> Unit) {
                         errorMessage = passwordErrorMessage
                     )
 
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    CustomTextInput(
+                        value = confirmationPassword,
+                        onValueChange = { confirmationPassword = it },
+                        title = "Confirmation Password",
+                        type = "password",
+                        errorMessage = confirmationPasswordErrorMessage
+                    )
+
                     Spacer(modifier = Modifier.height(24.dp))
 
                     CustomButton(
-                        text = "Login",
+                        text = "Create Account",
                         onClick = {
-                            if (email.isEmpty() || password.isEmpty()) {
+                            if (
+                                fullName.isEmpty() ||
+                                email.isEmpty() ||
+                                password.isEmpty() ||
+                                confirmationPassword.isEmpty()
+                            ) {
+                                fullNameErrorMessage = if (fullName.isEmpty()) {
+                                    "Full name cannot be empty"
+                                } else {
+                                    ""
+                                }
+
                                 if (email.isEmpty()) {
                                     emailErrorMessage = "Email cannot be empty"
                                 }
 
                                 if (password.isEmpty()) {
                                     passwordErrorMessage = "Password cannot be empty"
+                                }
+
+                                if (confirmationPassword.isEmpty()) {
+                                    confirmationPasswordErrorMessage = "Confirmation password cannot be empty"
                                 }
                             }
 
@@ -131,10 +174,25 @@ fun LoginScreen(onLoginButtonClicked: (String, String) -> Unit) {
                                 passwordErrorMessage = "Password must be at least 8 characters"
                             }
 
-                            if (emailErrorMessage == "" && passwordErrorMessage == "") {
-                                onLoginButtonClicked(email, password)
+                            if (confirmationPassword == password && confirmationPassword.trim().length >= 8) {
+                                confirmationPasswordErrorMessage = ""
+                            } else if (confirmationPassword.isNotEmpty() && confirmationPassword.trim().length < 8) {
+                                confirmationPasswordErrorMessage = "Confirmation password must be at least 8 characters"
+                            } else if (confirmationPassword.isNotEmpty() && confirmationPassword != password) {
+                                confirmationPasswordErrorMessage = "Password does not match confirmation password"
+                            }
+
+                            if (
+                                fullNameErrorMessage == "" &&
+                                emailErrorMessage == "" &&
+                                passwordErrorMessage == "" &&
+                                confirmationPasswordErrorMessage == ""
+                            ) {
+                                onLoginButtonClicked(fullName, email, password, confirmationPassword)
+                                fullName = ""
                                 email = ""
                                 password = ""
+                                confirmationPassword = ""
                             }
                         }
                     )
@@ -146,17 +204,25 @@ fun LoginScreen(onLoginButtonClicked: (String, String) -> Unit) {
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "Don’t have account?")
+                        Text(text = "Already have account?")
                         Button(
                             onClick = {
-                                context.startActivity(Intent(context, RegisterActivity::class.java))
+                                context.startActivity(Intent(context, LoginActivity::class.java))
+                                fullName = ""
+                                fullNameErrorMessage = ""
+                                email = ""
+                                emailErrorMessage = ""
+                                password = ""
+                                passwordErrorMessage = ""
+                                confirmationPassword = ""
+                                confirmationPasswordErrorMessage = ""
                             },
                             colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
                             modifier = Modifier.padding(0.dp),
                             elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp, 0.dp)
                         ) {
                             Text(
-                                text = "Register",
+                                text = "Login",
                                 color = Green
                             )
                         }
@@ -169,11 +235,15 @@ fun LoginScreen(onLoginButtonClicked: (String, String) -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview3() {
+fun DefaultPreview4() {
     FoodwiseMobileTheme {
-        LoginScreen(onLoginButtonClicked = { email, password ->
-            Log.e("LOGIN_SCREEN_EMAIL", email)
-            Log.e("LOGIN_SCREEN_PASSWORD", password)
-        })
+        RegisterScreen(
+            onLoginButtonClicked = { fullName, email, password, confirmationPassword ->
+                Log.e("REGISTER_SCREEN_NAME", fullName)
+                Log.e("REGISTER_SCREEN_EMAIL", email)
+                Log.e("REGISTER_SCREEN_PW", password)
+                Log.e("REGISTER_SCREEN_CPW", confirmationPassword)
+            }
+        )
     }
 }

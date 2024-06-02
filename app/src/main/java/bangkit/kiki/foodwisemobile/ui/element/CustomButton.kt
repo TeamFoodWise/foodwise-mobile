@@ -15,7 +15,7 @@ fun CustomButton(text: String, onClick: () -> Unit) {
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            text = "$text",
+            text = text,
             modifier = Modifier.padding(vertical = 2.dp)
         )
     }
