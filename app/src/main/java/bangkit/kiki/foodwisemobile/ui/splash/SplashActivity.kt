@@ -19,8 +19,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import bangkit.kiki.foodwisemobile.MainActivity
 import bangkit.kiki.foodwisemobile.R
+import bangkit.kiki.foodwisemobile.ui.login.LoginActivity
+import bangkit.kiki.foodwisemobile.ui.main.MainActivity
 import bangkit.kiki.foodwisemobile.ui.theme.FoodwiseMobileTheme
 
 class SplashActivity : ComponentActivity() {
@@ -38,7 +39,7 @@ class SplashActivity : ComponentActivity() {
         }
 
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }, 3000)
     }

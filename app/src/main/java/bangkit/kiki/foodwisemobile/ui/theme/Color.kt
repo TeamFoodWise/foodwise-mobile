@@ -2,6 +2,9 @@ package bangkit.kiki.foodwisemobile.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Green = Color(0x5BBD5F)
-val White = Color(0xFFFFFF)
-val Black = Color(0x444444)
+val Green = Color(android.graphics.Color.parseColor("#5BBD5F"))
+val DarkGreen = Color(android.graphics.Color.parseColor("#3F8842"))
+val White = Color(android.graphics.Color.parseColor("#FFFFFF"))
+val Black = Color(android.graphics.Color.parseColor("#121619"))
+val LightGrey = Color(android.graphics.Color.parseColor("#DDE1E6"))
+val DarkGrey = Color(android.graphics.Color.parseColor("#878D96"))
