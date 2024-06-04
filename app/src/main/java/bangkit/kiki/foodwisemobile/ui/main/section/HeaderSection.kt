@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import bangkit.kiki.foodwisemobile.ui.theme.Black
+import bangkit.kiki.foodwisemobile.ui.theme.Green
 import bangkit.kiki.foodwisemobile.ui.theme.LightGrey
 
 @Composable
@@ -24,8 +25,8 @@ fun HeaderSection() {
             text = "Welcome!",
             style = TextStyle(
                 fontSize = 20.sp,
-                color = LightGrey,
-                fontWeight = FontWeight.Bold
+                color = Black,
+                fontWeight = FontWeight.SemiBold
             ),
         )
 
@@ -33,7 +34,7 @@ fun HeaderSection() {
             text = "Ravandra Rifaqinara!",
             style = TextStyle(
                 fontSize = 24.sp,
-                color = Black,
+                color = Green,
                 fontWeight = FontWeight.Bold
             ),
         )
@@ -42,8 +43,8 @@ fun HeaderSection() {
             text = "ravandra@mail.com",
             style = TextStyle(
                 fontSize = 16.sp,
-                color = LightGrey,
-                fontWeight = FontWeight.Bold
+                color = Black,
+                fontWeight = FontWeight.Normal
             ),
         )
     }

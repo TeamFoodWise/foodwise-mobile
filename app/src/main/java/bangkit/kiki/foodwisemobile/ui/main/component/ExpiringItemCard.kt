@@ -10,6 +10,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import bangkit.kiki.foodwisemobile.ui.theme.LightGrey
@@ -19,7 +20,8 @@ fun ExpiringItemCard(name: String, daysLeft: String) {
     Card(
         shape = RoundedCornerShape(8.dp),
         elevation = 4.dp,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        backgroundColor = Color.White
     ) {
         Column(
             modifier = Modifier
