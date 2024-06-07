@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import bangkit.kiki.foodwisemobile.ui.element.BottomBar
 import bangkit.kiki.foodwisemobile.ui.theme.FoodwiseMobileTheme
 import bangkit.kiki.foodwisemobile.ui.main.component.LineSpacer
 import bangkit.kiki.foodwisemobile.ui.main.section.ExpiringSection
@@ -37,7 +38,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun HomePage() {
-    Scaffold { innerPadding ->
+    Scaffold(bottomBar = { BottomBar(currentPage = "home") }) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
