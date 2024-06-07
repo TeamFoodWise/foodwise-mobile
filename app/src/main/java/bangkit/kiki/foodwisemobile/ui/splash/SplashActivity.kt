@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -20,11 +21,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import bangkit.kiki.foodwisemobile.R
+import bangkit.kiki.foodwisemobile.ui.ViewModelFactory
 import bangkit.kiki.foodwisemobile.ui.login.LoginActivity
 import bangkit.kiki.foodwisemobile.ui.main.MainActivity
 import bangkit.kiki.foodwisemobile.ui.theme.FoodwiseMobileTheme
 
 class SplashActivity : ComponentActivity() {
+    private val viewModel by viewModels<SplashViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -39,9 +45,16 @@ class SplashActivity : ComponentActivity() {
         }
 
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
-        }, 3000)
+            viewModel.getSession().observe(this) { user ->
+                if (user.isLogin) {
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
+                } else {
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
+                }
+            }
+        }, 2000)
     }
 }
 
