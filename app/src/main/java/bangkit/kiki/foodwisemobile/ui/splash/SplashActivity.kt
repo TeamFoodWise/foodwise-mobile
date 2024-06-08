@@ -46,7 +46,7 @@ class SplashActivity : ComponentActivity() {
 
         Handler(Looper.getMainLooper()).postDelayed({
             viewModel.getSession().observe(this) { user ->
-                if (user.isLogin) {
+                if (true) {
                     startActivity(Intent(this, MainActivity::class.java))
                     finish()
                 } else {
