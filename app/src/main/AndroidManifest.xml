@@ -15,6 +15,18 @@
         android:theme="@style/Theme.FoodwiseMobile"
         tools:targetApi="31">
         <activity
+            android:name=".ui.inventory.InventoryActivity"
+            android:exported="true"
+            android:label="@string/title_activity_inventory"
+            android:theme="@style/Theme.FoodwiseMobile">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".ui.register.RegisterActivity"
             android:exported="false"
             android:label="@string/title_activity_register"
@@ -38,11 +50,6 @@
             android:label="@string/title_activity_splash"
             android:theme="@style/Theme.FoodwiseMobile">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
             <meta-data
                 android:name="android.app.lib_name"
@@ -52,7 +59,6 @@
             android:name=".ui.main.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.FoodwiseMobile">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
