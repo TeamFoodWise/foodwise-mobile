@@ -24,9 +24,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import bangkit.kiki.foodwisemobile.data.model.RecipeRecommendationCardModel
+import bangkit.kiki.foodwisemobile.data.model.RecipeRecommendationModel
 import bangkit.kiki.foodwisemobile.ui.element.BottomBar
-import bangkit.kiki.foodwisemobile.ui.main.MainActivity
+import bangkit.kiki.foodwisemobile.ui.recipeRecommendationDetail.RecipeRecommendationDetailActivity
 import bangkit.kiki.foodwisemobile.ui.theme.Black
 import bangkit.kiki.foodwisemobile.ui.theme.FoodwiseMobileTheme
 import bangkit.kiki.foodwisemobile.ui.theme.Green
@@ -49,7 +49,7 @@ class RecipesRecommendationActivity : ComponentActivity() {
 }
 
 @Composable
-fun RecipeRecommendationCard(item: RecipeRecommendationCardModel) {
+fun RecipeRecommendationCard(item: RecipeRecommendationModel) {
     val context = LocalContext.current
 
     val ingredientsString = item.ingredients.joinToString(
@@ -80,7 +80,9 @@ fun RecipeRecommendationCard(item: RecipeRecommendationCardModel) {
                 )
                 .padding(16.dp)
                 .clickable {
-                    context.startActivity(Intent(context, MainActivity::class.java))
+                    val intent = Intent(context, RecipeRecommendationDetailActivity::class.java)
+                    intent.putExtra(RecipeRecommendationDetailActivity.EXTRA_RECIPE_ID, item.id)
+                    context.startActivity(Intent(context, RecipeRecommendationDetailActivity::class.java))
                 }
         ) {
             Column {
@@ -130,7 +132,8 @@ fun RecipesRecommendationPage() {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 RecipeRecommendationCard(
-                    item = RecipeRecommendationCardModel(
+                    item = RecipeRecommendationModel(
+                        id = "item-1",
                         name = "Chicken Curry",
                         category = "Makanan",
                         ingredients = listOf("Chicken", "Coconut milk", "Shallots", "Garlic")
@@ -138,7 +141,8 @@ fun RecipesRecommendationPage() {
                 )
 
                 RecipeRecommendationCard(
-                    item = RecipeRecommendationCardModel(
+                    item = RecipeRecommendationModel(
+                        id = "item-2",
                         name = "Chicken Curry",
                         category = "Makanan",
                         ingredients = listOf("Chicken", "Coconut milk", "Shallots", "Garlic")
@@ -146,7 +150,8 @@ fun RecipesRecommendationPage() {
                 )
 
                 RecipeRecommendationCard(
-                    item = RecipeRecommendationCardModel(
+                    item = RecipeRecommendationModel(
+                        id = "item-3",
                         name = "Chicken Curry",
                         category = "Makanan",
                         ingredients = listOf("Chicken", "Coconut milk", "Shallots", "Garlic")
@@ -154,7 +159,8 @@ fun RecipesRecommendationPage() {
                 )
 
                 RecipeRecommendationCard(
-                    item = RecipeRecommendationCardModel(
+                    item = RecipeRecommendationModel(
+                        id = "item-4",
                         name = "Chicken Curry",
                         category = "Makanan",
                         ingredients = listOf("Chicken", "Coconut milk", "Shallots", "Garlic")
@@ -162,7 +168,8 @@ fun RecipesRecommendationPage() {
                 )
 
                 RecipeRecommendationCard(
-                    item = RecipeRecommendationCardModel(
+                    item = RecipeRecommendationModel(
+                        id = "item-5",
                         name = "Chicken Curry",
                         category = "Makanan",
                         ingredients = listOf("Chicken", "Coconut milk", "Shallots", "Garlic")
@@ -170,7 +177,8 @@ fun RecipesRecommendationPage() {
                 )
 
                 RecipeRecommendationCard(
-                    item = RecipeRecommendationCardModel(
+                    item = RecipeRecommendationModel(
+                        id = "item-6",
                         name = "Chicken Curry",
                         category = "Makanan",
                         ingredients = listOf("Chicken", "Coconut milk", "Shallots", "Garlic")
@@ -178,7 +186,8 @@ fun RecipesRecommendationPage() {
                 )
 
                 RecipeRecommendationCard(
-                    item = RecipeRecommendationCardModel(
+                    item = RecipeRecommendationModel(
+                        id = "item-7",
                         name = "Chicken Curry",
                         category = "Makanan",
                         ingredients = listOf("Chicken", "Coconut milk", "Shallots", "Garlic")

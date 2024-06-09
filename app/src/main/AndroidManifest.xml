@@ -15,6 +15,15 @@
         android:theme="@style/Theme.FoodwiseMobile"
         tools:targetApi="31">
         <activity
+            android:name=".ui.recipeRecommendationDetail.RecipeRecommendationDetailActivity"
+            android:exported="false"
+            android:label="@string/title_activity_recipe_recommendation_detail"
+            android:theme="@style/Theme.FoodwiseMobile">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".ui.recipesRecommendation.RecipesRecommendationActivity"
             android:exported="false"
             android:label="@string/title_activity_recipes_recommendation"
