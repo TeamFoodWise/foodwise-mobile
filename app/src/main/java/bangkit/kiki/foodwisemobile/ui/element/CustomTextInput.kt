@@ -21,14 +21,20 @@ import bangkit.kiki.foodwisemobile.ui.theme.Green
 import bangkit.kiki.foodwisemobile.ui.theme.LightGrey
 
 @Composable
-fun CustomTextInput(value: String, onValueChange: (String) -> Unit, title: String, errorMessage: String? = "", type: String? = "") {
+fun CustomTextInput(
+    value: String,
+    onValueChange: (String) -> Unit,
+    title: String? = "",
+    errorMessage: String? = "",
+    type: String? = ""
+) {
     var passwordVisible by remember { mutableStateOf(false) }
 
     Column {
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            label = { Text(text = title, style = TextStyle(color = DarkGrey)) },
+            label = if (!title.isNullOrEmpty()) { { Text(text = title, style = TextStyle(color = DarkGrey)) } } else null,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = if (passwordVisible || type != "password") VisualTransformation.None else PasswordVisualTransformation(),

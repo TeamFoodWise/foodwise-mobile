@@ -58,10 +58,11 @@ fun LoginScreen(onLoginButtonClicked: (String, String) -> Unit) {
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
-        content = {
+        content = { innerPadding ->
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(innerPadding)
                     .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
