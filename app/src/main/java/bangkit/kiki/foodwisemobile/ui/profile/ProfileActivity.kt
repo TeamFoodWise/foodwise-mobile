@@ -30,13 +30,13 @@ import androidx.compose.ui.unit.sp
 import bangkit.kiki.foodwisemobile.ui.ViewModelFactory
 import bangkit.kiki.foodwisemobile.ui.element.BottomBar
 import bangkit.kiki.foodwisemobile.ui.element.CustomButton
-import bangkit.kiki.foodwisemobile.ui.main.MainActivity
 import bangkit.kiki.foodwisemobile.ui.theme.Black
 import bangkit.kiki.foodwisemobile.ui.theme.FoodwiseMobileTheme
 import bangkit.kiki.foodwisemobile.ui.theme.Red
 import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.launch
 import bangkit.kiki.foodwisemobile.R
+import bangkit.kiki.foodwisemobile.ui.editProfile.EditProfileActivity
 import bangkit.kiki.foodwisemobile.ui.login.LoginActivity
 
 class ProfileActivity : ComponentActivity() {
@@ -48,7 +48,6 @@ class ProfileActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             FoodwiseMobileTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
@@ -92,7 +91,7 @@ fun ProfilePage(logoutOnClick: suspend () -> Unit) {
             CustomButton(
                 text = "Edit Profile",
                 onClick = {
-                    context.startActivity(Intent(context, MainActivity::class.java))
+                    context.startActivity(Intent(context, EditProfileActivity::class.java))
                 }
             )
 
@@ -162,7 +161,7 @@ fun ProfilePage(logoutOnClick: suspend () -> Unit) {
                 Button(
                     onClick = {
                         coroutineScope.launch {
-                            logoutOnClick
+                            logoutOnClick()
                             context.startActivity(Intent(context, LoginActivity::class.java))
                         }
                     },
