@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import bangkit.kiki.foodwisemobile.R
@@ -25,6 +26,7 @@ import bangkit.kiki.foodwisemobile.ui.ViewModelFactory
 import bangkit.kiki.foodwisemobile.ui.login.LoginActivity
 import bangkit.kiki.foodwisemobile.ui.main.MainActivity
 import bangkit.kiki.foodwisemobile.ui.theme.FoodwiseMobileTheme
+import bangkit.kiki.foodwisemobile.ui.theme.Green
 
 class SplashActivity : ComponentActivity() {
     private val viewModel by viewModels<SplashViewModel> {
@@ -33,6 +35,7 @@ class SplashActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.statusBarColor = Green.toArgb()
         setContent {
             FoodwiseMobileTheme {
                 Surface(

@@ -27,6 +27,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
 import bangkit.kiki.foodwisemobile.R
 import bangkit.kiki.foodwisemobile.ui.element.BottomBar
 import bangkit.kiki.foodwisemobile.ui.element.CustomButton
@@ -40,6 +41,7 @@ import coil.compose.rememberAsyncImagePainter
 class EditProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = true
         setContent {
             FoodwiseMobileTheme {
                 Surface(
