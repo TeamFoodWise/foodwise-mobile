@@ -1,8 +1,9 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">FoodWise</string>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_edit_profile">EditProfileActivity</string>
+    <string name="title_activity_recipes_recommendation">RecipesRecommendationActivity</string>
 </resources>
