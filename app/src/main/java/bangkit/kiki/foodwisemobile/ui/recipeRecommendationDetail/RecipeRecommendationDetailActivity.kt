@@ -3,19 +3,18 @@ package bangkit.kiki.foodwisemobile.ui.recipeRecommendationDetail
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
 import bangkit.kiki.foodwisemobile.data.model.RecipeRecommendationDetailModel
 import bangkit.kiki.foodwisemobile.ui.element.BottomBar
 import bangkit.kiki.foodwisemobile.ui.theme.Black
@@ -24,6 +23,7 @@ import bangkit.kiki.foodwisemobile.ui.theme.FoodwiseMobileTheme
 class RecipeRecommendationDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = true
         setContent {
             FoodwiseMobileTheme {
                 Surface(

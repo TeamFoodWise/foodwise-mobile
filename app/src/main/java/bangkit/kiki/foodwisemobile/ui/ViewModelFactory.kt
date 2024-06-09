@@ -3,7 +3,7 @@ package bangkit.kiki.foodwisemobile.ui
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import bangkit.kiki.foodwisemobile.data.repository.config.Injection
+import bangkit.kiki.foodwisemobile.config.Injection
 import bangkit.kiki.foodwisemobile.data.repository.UserRepository
 import bangkit.kiki.foodwisemobile.ui.profile.ProfileViewModel
 import bangkit.kiki.foodwisemobile.ui.splash.SplashViewModel

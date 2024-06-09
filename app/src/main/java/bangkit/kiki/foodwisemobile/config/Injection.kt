@@ -1,4 +1,4 @@
-package bangkit.kiki.foodwisemobile.data.repository.config
+package bangkit.kiki.foodwisemobile.config
 
 import android.content.Context
 import bangkit.kiki.foodwisemobile.data.context.UserContext

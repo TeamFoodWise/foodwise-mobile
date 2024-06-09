@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
 import bangkit.kiki.foodwisemobile.ui.ViewModelFactory
 import bangkit.kiki.foodwisemobile.ui.element.BottomBar
 import bangkit.kiki.foodwisemobile.ui.element.CustomButton
@@ -46,6 +47,7 @@ class ProfileActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = true
         setContent {
             FoodwiseMobileTheme {
                 Surface(

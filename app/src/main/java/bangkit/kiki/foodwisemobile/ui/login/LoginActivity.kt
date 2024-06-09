@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
 import bangkit.kiki.foodwisemobile.R
 import bangkit.kiki.foodwisemobile.ui.element.CustomButton
 import bangkit.kiki.foodwisemobile.ui.element.CustomTextInput
@@ -30,13 +31,13 @@ import bangkit.kiki.foodwisemobile.util.isEmailValid
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = true
         setContent {
             FoodwiseMobileTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-
                     LoginScreen(onLoginButtonClicked = { email, password ->
                         Log.e("LOGIN_SCREEN_EMAIL", email)
                         Log.e("LOGIN_SCREEN_PASSWORD", password)

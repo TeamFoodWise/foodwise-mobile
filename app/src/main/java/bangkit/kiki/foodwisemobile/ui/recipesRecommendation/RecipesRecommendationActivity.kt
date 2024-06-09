@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
 import bangkit.kiki.foodwisemobile.data.model.RecipeRecommendationModel
 import bangkit.kiki.foodwisemobile.ui.element.BottomBar
 import bangkit.kiki.foodwisemobile.ui.recipeRecommendationDetail.RecipeRecommendationDetailActivity
@@ -35,6 +36,7 @@ import bangkit.kiki.foodwisemobile.ui.theme.White
 class RecipesRecommendationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = true
         setContent {
             FoodwiseMobileTheme {
                 Surface(
