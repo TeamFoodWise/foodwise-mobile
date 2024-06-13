@@ -69,6 +69,6 @@ fun DefaultPreview() {
 @Composable
 fun ProgressPreview() {
     FoodwiseMobileTheme {
-        InventoryStatisticsSection()
+        ExpiringSection()
     }
 }

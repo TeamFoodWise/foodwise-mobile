@@ -80,8 +80,6 @@ fun InventoryStatisticsSection() {
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(8.dp))
-        CustomLinearProgressIndicator(progress = 0.5f, text = "Minggu lalu")
-        Spacer(modifier = Modifier.height(8.dp))
         CustomLinearProgressIndicator(progress = 1f, text = "Bulan lalu")
     }
 }

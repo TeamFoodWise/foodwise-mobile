@@ -1,5 +1,6 @@
 package bangkit.kiki.foodwisemobile.ui.main.section
 
+import android.content.Intent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -7,6 +8,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -14,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import bangkit.kiki.foodwisemobile.ui.theme.LightGrey
 import bangkit.kiki.foodwisemobile.ui.theme.Black
 import bangkit.kiki.foodwisemobile.ui.element.CustomButton
+import bangkit.kiki.foodwisemobile.ui.inventory.InventoryActivity
 import bangkit.kiki.foodwisemobile.ui.main.component.ExpiringItemCard
 
 @Composable
@@ -62,9 +65,14 @@ fun ExpiringSection() {
                 ExpiringItemCard(name = item.first, daysLeft = item.second)
             }
         }
+        val context = LocalContext.current
 
-        CustomButton(text = "Go to inventory") {
-            // TODO: Handle button click
-        }
+        CustomButton(
+            text = "Go to inventory",
+            onClick = {
+                val intent = Intent(context, InventoryActivity::class.java)
+                context.startActivity(intent)
+            }
+        )
     }
 }
