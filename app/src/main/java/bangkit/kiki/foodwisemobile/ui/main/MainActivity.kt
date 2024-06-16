@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import bangkit.kiki.foodwisemobile.data.model.ExpiringFood
+import bangkit.kiki.foodwisemobile.data.model.ExpiringFoodResponse
 import bangkit.kiki.foodwisemobile.data.model.UserInventoryModel
 import bangkit.kiki.foodwisemobile.ui.element.BottomBar
 import bangkit.kiki.foodwisemobile.ui.theme.FoodwiseMobileTheme
@@ -56,6 +58,18 @@ fun HomePage() {
         "Expired" to userInventory.expiredCount
     )
 
+    // Mock data for expiring items
+    val expiringItems = listOf(
+        ExpiringFood("Meat", 2),
+        ExpiringFood("Ayam Kampung", 2),
+        ExpiringFood("Lasagna", 2),
+        ExpiringFood("Bawang Merah", 2),
+        ExpiringFood("Lasagna", 2),
+        ExpiringFood("Bawang Merah", 2),
+    )
+
+    val expiringFoodResponse = ExpiringFoodResponse(foods = emptyList())
+
     Scaffold(bottomBar = { BottomBar(currentPage = "home") }) { innerPadding ->
         Column(
             modifier = Modifier
@@ -69,8 +83,7 @@ fun HomePage() {
             HeaderSection()
             InventoryStatisticsSection(userInventory = userInventory, statisticItems = statisticItems)
             LineSpacer()
-            ExpiringSection()
-
+            ExpiringSection(expiringFoodResponse = expiringFoodResponse)
         }
     }
 }
@@ -81,13 +94,5 @@ fun HomePage() {
 fun DefaultPreview() {
     FoodwiseMobileTheme {
         HomePage()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ProgressPreview() {
-    FoodwiseMobileTheme {
-        ExpiringSection()
     }
 }
