@@ -54,17 +54,21 @@ fun ExpiringSection() {
             "Bawang Merah" to "2 days",
         )
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.height(270.dp)
-        ) {
-            items(expiringItems.take(6)) { item ->
-                ExpiringItemCard(name = item.first, daysLeft = item.second)
+        val gridHeight = 280.dp
+        Box(modifier = Modifier.height(gridHeight)) {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                contentPadding = PaddingValues(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(expiringItems.take(6)) { item ->
+                    ExpiringItemCard(name = item.first, daysLeft = item.second)
+                }
             }
         }
+
         val context = LocalContext.current
 
         CustomButton(

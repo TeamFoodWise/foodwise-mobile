@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import bangkit.kiki.foodwisemobile.ui.element.BottomBar
 import bangkit.kiki.foodwisemobile.ui.element.CustomButton
 import bangkit.kiki.foodwisemobile.ui.inventory.component.ConsumeAlertDialog
 import bangkit.kiki.foodwisemobile.ui.inventory.component.HeaderCard
@@ -156,7 +157,7 @@ fun InventoryPage() {
     val context = LocalContext.current
 
 
-    Scaffold { contentPadding ->
+    Scaffold(bottomBar = { BottomBar(currentPage = "inventory") }) { contentPadding ->
         Column(modifier = Modifier
             .fillMaxSize()
             .padding(contentPadding)) {
