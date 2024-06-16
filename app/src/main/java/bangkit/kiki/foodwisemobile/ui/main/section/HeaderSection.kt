@@ -12,7 +12,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import bangkit.kiki.foodwisemobile.ui.theme.Black
 import bangkit.kiki.foodwisemobile.ui.theme.Green
-import bangkit.kiki.foodwisemobile.ui.theme.LightGrey
 
 @Composable
 fun HeaderSection() {

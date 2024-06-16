@@ -1,6 +1,7 @@
 package bangkit.kiki.foodwisemobile.ui.main
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -12,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
+import bangkit.kiki.foodwisemobile.ui.element.BottomBar
 import bangkit.kiki.foodwisemobile.ui.theme.FoodwiseMobileTheme
 import bangkit.kiki.foodwisemobile.ui.main.component.LineSpacer
 import bangkit.kiki.foodwisemobile.ui.main.section.ExpiringSection
@@ -22,6 +25,7 @@ import bangkit.kiki.foodwisemobile.ui.main.section.InventoryStatisticsSection
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = true
         setContent {
             FoodwiseMobileTheme {
                 Surface(
@@ -37,7 +41,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun HomePage() {
-    Scaffold { innerPadding ->
+    Scaffold(bottomBar = { BottomBar(currentPage = "home") }) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
