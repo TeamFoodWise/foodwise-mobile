@@ -26,7 +26,8 @@ fun CustomTextInput(
     onValueChange: (String) -> Unit,
     title: String? = "",
     errorMessage: String? = "",
-    type: String? = ""
+    type: String? = "",
+    placeholder: String? = ""
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -39,7 +40,8 @@ fun CustomTextInput(
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = if (passwordVisible || type != "password") VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
-                val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                val image =
+                    if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
 
                 if (type == "password") {
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
@@ -49,6 +51,11 @@ fun CustomTextInput(
                             contentDescription = "Toggle password visibility"
                         )
                     }
+                }
+            },
+            placeholder = {
+                if (!placeholder.isNullOrEmpty()) {
+                    Text(text = placeholder)
                 }
             },
             isError = errorMessage != "",

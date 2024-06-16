@@ -11,11 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CustomButton(text: String, onClick: () -> Unit) {
+fun CustomButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Button(
         shape = RoundedCornerShape(8.dp),
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         elevation = ButtonDefaults.elevation(defaultElevation = 8.dp)
     ) {
         Text(
