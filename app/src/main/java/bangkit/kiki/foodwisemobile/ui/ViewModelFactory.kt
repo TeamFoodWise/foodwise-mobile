@@ -7,6 +7,7 @@ import bangkit.kiki.foodwisemobile.config.Injection
 import bangkit.kiki.foodwisemobile.data.repository.UserRepository
 import bangkit.kiki.foodwisemobile.ui.login.LoginViewModel
 import bangkit.kiki.foodwisemobile.ui.profile.ProfileViewModel
+import bangkit.kiki.foodwisemobile.ui.register.RegisterViewModel
 import bangkit.kiki.foodwisemobile.ui.splash.SplashViewModel
 
 class ViewModelFactory(private val repository: UserRepository): ViewModelProvider.NewInstanceFactory() {
@@ -21,6 +22,9 @@ class ViewModelFactory(private val repository: UserRepository): ViewModelProvide
             }
             modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
                 LoginViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
+                RegisterViewModel(repository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }
