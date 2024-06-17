@@ -2,7 +2,7 @@ package bangkit.kiki.foodwisemobile.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class UserInventoryModel(
+data class UserInventoryResponse(
     @SerializedName("consumed_count") val consumedCount: Int,
     @SerializedName("in_stock_count") val inStockCount: Int,
     @SerializedName("expired_count") val expiredCount: Int,
@@ -13,9 +13,9 @@ data class UserInventoryModel(
 
 data class ExpiringFood(
     val name: String,
-    val remainingDays: Int
+    @SerializedName("remaining_days") val remainingDays: Int
 )
 
 data class ExpiringFoodResponse(
-    val foods: List<ExpiringFood>
+    @SerializedName("food_item") val foods: List<ExpiringFood>
 )
