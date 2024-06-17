@@ -4,6 +4,12 @@ plugins {
     id 'kotlin-parcelize'
 }
 
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(new FileInputStream(localPropertiesFile))
+}
+
 android {
     namespace 'bangkit.kiki.foodwisemobile'
     compileSdk 34
@@ -14,6 +20,7 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
+        buildConfigField "String", "BASE_URL", "\"${localProperties.getProperty('BASE_URL')}\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
