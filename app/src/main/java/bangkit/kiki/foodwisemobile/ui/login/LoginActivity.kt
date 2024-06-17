@@ -60,7 +60,16 @@ fun LoginScreen(viewModel: LoginViewModel, activity: ComponentActivity) {
     var emailErrorMessage by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordErrorMessage by remember { mutableStateOf("") }
+    val isLoading by viewModel.isLoading.collectAsState()
     val context = LocalContext.current
+
+    LaunchedEffect(viewModel.isError) {
+        viewModel.isError.observe(activity) { isError ->
+            if (isError) {
+                Toast.makeText(activity, viewModel.errorMessage.value, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     Scaffold(
         modifier = Modifier
@@ -115,6 +124,7 @@ fun LoginScreen(viewModel: LoginViewModel, activity: ComponentActivity) {
                     Spacer(modifier = Modifier.height(24.dp))
 
                     CustomButton(
+                        isLoading = isLoading,
                         text = "Login",
                         onClick = {
                             if (email.isEmpty() || password.isEmpty()) {
@@ -146,10 +156,10 @@ fun LoginScreen(viewModel: LoginViewModel, activity: ComponentActivity) {
                                         Toast.makeText(activity, "Welcome to FoodWise!", Toast.LENGTH_SHORT).show()
                                         context.startActivity(Intent(context, MainActivity::class.java))
                                         activity.finish()
+                                        email = ""
+                                        password = ""
                                     }
                                 }
-                                email = ""
-                                password = ""
                             }
                         }
                     )

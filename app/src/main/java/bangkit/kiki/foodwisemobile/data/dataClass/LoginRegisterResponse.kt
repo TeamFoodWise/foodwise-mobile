@@ -5,7 +5,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
 @Parcelize
-data class LoginResponse(
+data class LoginRegisterResponse(
 
 	@field:SerializedName("access_token")
 	val accessToken: String? = null,

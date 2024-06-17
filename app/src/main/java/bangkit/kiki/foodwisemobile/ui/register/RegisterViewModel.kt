@@ -1,4 +1,4 @@
-package bangkit.kiki.foodwisemobile.ui.login
+package bangkit.kiki.foodwisemobile.ui.register
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import retrofit2.HttpException
 
-class LoginViewModel(private val repository: UserRepository): ViewModel() {
+class RegisterViewModel(private val repository: UserRepository): ViewModel() {
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> get() = _isLoading
 
@@ -20,12 +20,22 @@ class LoginViewModel(private val repository: UserRepository): ViewModel() {
     private val _errorMessage = MutableLiveData("")
     val errorMessage: LiveData<String> = _errorMessage
 
-    suspend fun login(email: String, password: String): Boolean {
+    suspend fun register(
+        fullName: String,
+        email: String,
+        password: String,
+        confirmationPassword: String
+    ): Boolean {
         _isLoading.value = true
         _isError.value = false
 
         try {
-            val response = ApiConfig.getApiService().login(email, password)
+            val response = ApiConfig.getApiService().register(
+                fullName,
+                email,
+                password,
+                confirmationPassword
+            )
 
             if (
                 (response.accessToken != null) &&

@@ -1,8 +1,7 @@
 package bangkit.kiki.foodwisemobile.data.api
 
-import bangkit.kiki.foodwisemobile.data.api.ApiService.Companion.BASE_USER_URL
-import bangkit.kiki.foodwisemobile.data.dataClass.LoginResponse
 import bangkit.kiki.foodwisemobile.data.model.UserInventoryModel
+import bangkit.kiki.foodwisemobile.data.dataClass.LoginRegisterResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -15,7 +14,16 @@ interface ApiService {
     suspend fun login(
         @Field("email") email: String,
         @Field("password") password: String
-    ): LoginResponse
+    ): LoginRegisterResponse
+
+    @FormUrlEncoded
+    @POST("${BASE_AUTH_URL}register")
+    suspend fun register(
+        @Field("full_name") fullName: String,
+        @Field("email") email: String,
+        @Field("password") password: String,
+        @Field("confirm_password") confirmPassword: String,
+    ): LoginRegisterResponse
 
     @GET("${BASE_USER_URL}statistics")
     suspend fun getStatistic() : UserInventoryModel
