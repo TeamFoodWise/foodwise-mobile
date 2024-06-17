@@ -2,9 +2,10 @@ package bangkit.kiki.foodwisemobile.ui.register
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,20 +18,28 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import bangkit.kiki.foodwisemobile.R
+import bangkit.kiki.foodwisemobile.ui.ViewModelFactory
 import bangkit.kiki.foodwisemobile.ui.element.CustomButton
 import bangkit.kiki.foodwisemobile.ui.element.CustomTextInput
 import bangkit.kiki.foodwisemobile.ui.login.LoginActivity
+import bangkit.kiki.foodwisemobile.ui.main.MainActivity
 import bangkit.kiki.foodwisemobile.ui.theme.Black
 import bangkit.kiki.foodwisemobile.ui.theme.FoodwiseMobileTheme
 import bangkit.kiki.foodwisemobile.ui.theme.Green
 import bangkit.kiki.foodwisemobile.util.isEmailValid
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class RegisterActivity : ComponentActivity() {
+    private val viewModel by viewModels<RegisterViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = true
@@ -40,14 +49,7 @@ class RegisterActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    RegisterScreen(
-                        onLoginButtonClicked = { fullName, email, password, confirmationPassword ->
-                            Log.e("REGISTER_SCREEN_NAME", fullName)
-                            Log.e("REGISTER_SCREEN_EMAIL", email)
-                            Log.e("REGISTER_SCREEN_PW", password)
-                            Log.e("REGISTER_SCREEN_CPW", confirmationPassword)
-                        }
-                    )
+                    RegisterScreen(viewModel = viewModel, activity = this)
                 }
             }
         }
@@ -55,7 +57,7 @@ class RegisterActivity : ComponentActivity() {
 }
 
 @Composable
-fun RegisterScreen(onLoginButtonClicked: (String, String, String, String) -> Unit) {
+fun RegisterScreen(viewModel: RegisterViewModel, activity: ComponentActivity) {
     var fullName by remember { mutableStateOf("") }
     var fullNameErrorMessage by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -64,7 +66,16 @@ fun RegisterScreen(onLoginButtonClicked: (String, String, String, String) -> Uni
     var passwordErrorMessage by remember { mutableStateOf("") }
     var confirmationPassword by remember { mutableStateOf("") }
     var confirmationPasswordErrorMessage by remember { mutableStateOf("") }
+    val isLoading by viewModel.isLoading.collectAsState()
     val context = LocalContext.current
+
+    LaunchedEffect(viewModel.isError) {
+        viewModel.isError.observe(activity) { isError ->
+            if (isError) {
+                Toast.makeText(activity, viewModel.errorMessage.value, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     Scaffold(
         modifier = Modifier
@@ -138,6 +149,7 @@ fun RegisterScreen(onLoginButtonClicked: (String, String, String, String) -> Uni
                     Spacer(modifier = Modifier.height(24.dp))
 
                     CustomButton(
+                        isLoading = isLoading,
                         text = "Create Account",
                         onClick = {
                             if (
@@ -191,11 +203,24 @@ fun RegisterScreen(onLoginButtonClicked: (String, String, String, String) -> Uni
                                 passwordErrorMessage == "" &&
                                 confirmationPasswordErrorMessage == ""
                             ) {
-                                onLoginButtonClicked(fullName, email, password, confirmationPassword)
-                                fullName = ""
-                                email = ""
-                                password = ""
-                                confirmationPassword = ""
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    val success = viewModel.register(
+                                        fullName,
+                                        email,
+                                        password,
+                                        confirmationPassword
+                                    )
+
+                                    if (success) {
+                                        Toast.makeText(activity, "Welcome to FoodWise!", Toast.LENGTH_SHORT).show()
+                                        context.startActivity(Intent(context, MainActivity::class.java))
+                                        activity.finish()
+                                        fullName = ""
+                                        email = ""
+                                        password = ""
+                                        confirmationPassword = ""
+                                    }
+                                }
                             }
                         }
                     )
@@ -234,19 +259,4 @@ fun RegisterScreen(onLoginButtonClicked: (String, String, String, String) -> Uni
             }
         }
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview4() {
-    FoodwiseMobileTheme {
-        RegisterScreen(
-            onLoginButtonClicked = { fullName, email, password, confirmationPassword ->
-                Log.e("REGISTER_SCREEN_NAME", fullName)
-                Log.e("REGISTER_SCREEN_EMAIL", email)
-                Log.e("REGISTER_SCREEN_PW", password)
-                Log.e("REGISTER_SCREEN_CPW", confirmationPassword)
-            }
-        )
-    }
 }

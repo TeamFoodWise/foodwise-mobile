@@ -2,6 +2,7 @@ package bangkit.kiki.foodwisemobile.ui.element
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -15,6 +16,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import bangkit.kiki.foodwisemobile.ui.theme.DarkGrey
 import bangkit.kiki.foodwisemobile.ui.theme.Green
@@ -35,7 +37,15 @@ fun CustomTextInput(
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            label = if (!title.isNullOrEmpty()) { { Text(text = title, style = TextStyle(color = DarkGrey)) } } else null,
+            label = {
+                if (!title.isNullOrEmpty()) {
+                    Text(
+                        text = title,
+                        style = TextStyle(color = DarkGrey),
+                        modifier = Modifier.padding(vertical = 3.dp)
+                    )
+                }
+            },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = if (passwordVisible || type != "password") VisualTransformation.None else PasswordVisualTransformation(),

@@ -2,9 +2,10 @@ package bangkit.kiki.foodwisemobile.ui.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,18 +18,26 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import bangkit.kiki.foodwisemobile.R
+import bangkit.kiki.foodwisemobile.ui.ViewModelFactory
 import bangkit.kiki.foodwisemobile.ui.element.CustomButton
 import bangkit.kiki.foodwisemobile.ui.element.CustomTextInput
+import bangkit.kiki.foodwisemobile.ui.main.MainActivity
 import bangkit.kiki.foodwisemobile.ui.register.RegisterActivity
 import bangkit.kiki.foodwisemobile.ui.theme.*
 import bangkit.kiki.foodwisemobile.util.isEmailValid
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class LoginActivity : ComponentActivity() {
+    private val viewModel by viewModels<LoginViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = true
@@ -38,10 +47,7 @@ class LoginActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    LoginScreen(onLoginButtonClicked = { email, password ->
-                        Log.e("LOGIN_SCREEN_EMAIL", email)
-                        Log.e("LOGIN_SCREEN_PASSWORD", password)
-                    })
+                    LoginScreen(viewModel = viewModel, activity = this)
                 }
             }
         }
@@ -49,12 +55,21 @@ class LoginActivity : ComponentActivity() {
 }
 
 @Composable
-fun LoginScreen(onLoginButtonClicked: (String, String) -> Unit) {
+fun LoginScreen(viewModel: LoginViewModel, activity: ComponentActivity) {
     var email by remember { mutableStateOf("") }
     var emailErrorMessage by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordErrorMessage by remember { mutableStateOf("") }
+    val isLoading by viewModel.isLoading.collectAsState()
     val context = LocalContext.current
+
+    LaunchedEffect(viewModel.isError) {
+        viewModel.isError.observe(activity) { isError ->
+            if (isError) {
+                Toast.makeText(activity, viewModel.errorMessage.value, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     Scaffold(
         modifier = Modifier
@@ -109,6 +124,7 @@ fun LoginScreen(onLoginButtonClicked: (String, String) -> Unit) {
                     Spacer(modifier = Modifier.height(24.dp))
 
                     CustomButton(
+                        isLoading = isLoading,
                         text = "Login",
                         onClick = {
                             if (email.isEmpty() || password.isEmpty()) {
@@ -134,9 +150,16 @@ fun LoginScreen(onLoginButtonClicked: (String, String) -> Unit) {
                             }
 
                             if (emailErrorMessage == "" && passwordErrorMessage == "") {
-                                onLoginButtonClicked(email, password)
-                                email = ""
-                                password = ""
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    val success =  viewModel.login(email, password)
+                                    if (success) {
+                                        Toast.makeText(activity, "Welcome to FoodWise!", Toast.LENGTH_SHORT).show()
+                                        context.startActivity(Intent(context, MainActivity::class.java))
+                                        activity.finish()
+                                        email = ""
+                                        password = ""
+                                    }
+                                }
                             }
                         }
                     )
@@ -167,15 +190,4 @@ fun LoginScreen(onLoginButtonClicked: (String, String) -> Unit) {
             }
         }
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview3() {
-    FoodwiseMobileTheme {
-        LoginScreen(onLoginButtonClicked = { email, password ->
-            Log.e("LOGIN_SCREEN_EMAIL", email)
-            Log.e("LOGIN_SCREEN_PASSWORD", password)
-        })
-    }
 }
