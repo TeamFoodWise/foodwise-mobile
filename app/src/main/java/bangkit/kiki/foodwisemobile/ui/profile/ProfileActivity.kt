@@ -44,17 +44,29 @@ class ProfileActivity : ComponentActivity() {
     private val viewModel by viewModels<ProfileViewModel> {
         ViewModelFactory.getInstance(this)
     }
+    private lateinit var userFullName: String
+    private lateinit var userEmail: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = true
+
+        viewModel.getSession().observe(this) { user ->
+            userFullName = user.fullName
+            userEmail = user.email
+        }
+
         setContent {
             FoodwiseMobileTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    ProfilePage(logoutOnClick = { viewModel.logout() })
+                    ProfilePage(
+                        userFullName = userFullName,
+                        userEmail = userEmail,
+                        logoutOnClick = { viewModel.logout() }
+                    )
                 }
             }
         }
@@ -62,7 +74,7 @@ class ProfileActivity : ComponentActivity() {
 }
 
 @Composable
-fun ProfilePage(logoutOnClick: suspend () -> Unit) {
+fun ProfilePage(userFullName: String, userEmail: String, logoutOnClick: suspend () -> Unit) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -77,7 +89,7 @@ fun ProfilePage(logoutOnClick: suspend () -> Unit) {
         ) {
             Image(
                 painter = rememberAsyncImagePainter(
-                    "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
+                    bangkit.kiki.foodwisemobile.util.AVATAR_DEFAULT
                 ),
                 contentDescription = "Profile Picture",
                 contentScale = ContentScale.Crop,
@@ -116,7 +128,7 @@ fun ProfilePage(logoutOnClick: suspend () -> Unit) {
                             )
                         )
                         Text(
-                            text = "Ravandra Rifaqinara",
+                            text = userFullName,
                             style = TextStyle(
                                 color = Black,
                                 fontSize = 16.sp,
@@ -139,7 +151,7 @@ fun ProfilePage(logoutOnClick: suspend () -> Unit) {
                             )
                         )
                         Text(
-                            text = "ravandra@gmail.com",
+                            text = userEmail,
                             style = TextStyle(
                                 color = Black,
                                 fontSize = 16.sp,
@@ -195,6 +207,6 @@ fun ProfilePage(logoutOnClick: suspend () -> Unit) {
 @Composable
 fun DefaultPreview5() {
     FoodwiseMobileTheme {
-        ProfilePage(logoutOnClick = {  })
+        ProfilePage(userFullName = "Test User", userEmail = "testuser@gmail.com", logoutOnClick = {  })
     }
 }

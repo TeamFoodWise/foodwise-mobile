@@ -3,10 +3,12 @@ package bangkit.kiki.foodwisemobile.data.api
 import bangkit.kiki.foodwisemobile.data.dataClass.LoginRegisterResponse
 import bangkit.kiki.foodwisemobile.data.model.ExpiringFoodResponse
 import bangkit.kiki.foodwisemobile.data.model.UserInventoryResponse
+import bangkit.kiki.foodwisemobile.data.dataClass.UpdateProfileResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 
 interface ApiService {
     // Authentication
@@ -32,6 +34,14 @@ interface ApiService {
 
     @GET("${BASE_ITEM_URL}expiring-soon")
     suspend fun getExpiringSoon() : ExpiringFoodResponse
+
+    @FormUrlEncoded
+    @PUT("${BASE_AUTH_URL}update-profile")
+    suspend fun updateProfile(
+        @Field("full_name") fullName: String,
+        @Field("password") password: String,
+        @Field("confirm_password") confirmPassword: String,
+    ): UpdateProfileResponse
 
     companion object {
         const val BASE_AUTH_URL = "api/auth/"

@@ -10,7 +10,7 @@ import retrofit2.Retrofit
 
 class ApiConfig {
     companion object {
-        private const val BASE_URL = bangkit.kiki.foodwisemobile.util.BASE_URL
+        private const val BASE_URL = BuildConfig.BASE_URL
 
         fun getApiService(): ApiService {
             val headerInterceptor = Interceptor { chain ->

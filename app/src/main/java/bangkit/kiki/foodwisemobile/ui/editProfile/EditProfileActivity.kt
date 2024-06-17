@@ -3,10 +3,13 @@ package bangkit.kiki.foodwisemobile.ui.editProfile
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,11 +27,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import bangkit.kiki.foodwisemobile.R
+import bangkit.kiki.foodwisemobile.ui.ViewModelFactory
 import bangkit.kiki.foodwisemobile.ui.element.BottomBar
 import bangkit.kiki.foodwisemobile.ui.element.CustomButton
 import bangkit.kiki.foodwisemobile.ui.element.CustomTextInput
@@ -37,18 +40,35 @@ import bangkit.kiki.foodwisemobile.ui.theme.Black
 import bangkit.kiki.foodwisemobile.ui.theme.FoodwiseMobileTheme
 import bangkit.kiki.foodwisemobile.ui.theme.Green
 import coil.compose.rememberAsyncImagePainter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class EditProfileActivity : ComponentActivity() {
+    private val viewModel by viewModels<EditProfileViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
+    private lateinit var userFullName: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = true
+
+        viewModel.userSession.observe(this) { user ->
+            userFullName = user.fullName
+        }
+
         setContent {
             FoodwiseMobileTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    EditProfilePage()
+                    EditProfilePage(
+                        userFullName = userFullName,
+                        viewModel = viewModel,
+                        activity = this
+                    )
                 }
             }
         }
@@ -56,20 +76,29 @@ class EditProfileActivity : ComponentActivity() {
 }
 
 @Composable
-fun EditProfilePage() {
-    var fullName by remember { mutableStateOf("Ravandra Rifaqinara!") }
+fun EditProfilePage(userFullName: String, viewModel: EditProfileViewModel, activity: ComponentActivity) {
+    var fullName by remember { mutableStateOf(userFullName) }
     var fullNameErrorMessage by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
     var newPasswordErrorMessage by remember { mutableStateOf("") }
     var confirmationNewPassword by remember { mutableStateOf("") }
     var confirmationNewPasswordErrorMessage by remember { mutableStateOf("") }
-    val context = LocalContext.current
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    val isLoading by viewModel.isLoading.collectAsState()
+    val context = LocalContext.current
 
     val pickImageLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         selectedImageUri = uri
+    }
+
+    LaunchedEffect(viewModel.isError) {
+        viewModel.isError.observe(activity) { isError ->
+            if (isError) {
+                Toast.makeText(activity, viewModel.errorMessage.value, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     Scaffold(bottomBar = { BottomBar(currentPage = "profile") }) { innerPadding ->
@@ -89,7 +118,7 @@ fun EditProfilePage() {
                     rememberAsyncImagePainter(model = selectedImageUri)
                 } else {
                     rememberAsyncImagePainter(
-                        "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
+                        bangkit.kiki.foodwisemobile.util.AVATAR_DEFAULT
                     )
                 }
 
@@ -172,6 +201,7 @@ fun EditProfilePage() {
             Spacer(modifier = Modifier.weight(1f))
 
             CustomButton(
+                isLoading = isLoading,
                 text = "Save Changes",
                 onClick = {
                     fullNameErrorMessage = if (fullName.isEmpty()) {
@@ -202,28 +232,37 @@ fun EditProfilePage() {
                         } else if (confirmationNewPassword.isNotEmpty() && confirmationNewPassword != newPassword) {
                             confirmationNewPasswordErrorMessage = "New Password does not match confirmation new password"
                         }
+                    }
 
-                        if (
-                            fullNameErrorMessage == "" &&
-                            newPasswordErrorMessage == "" &&
-                            confirmationNewPasswordErrorMessage == ""
-                        ) {
-                            context.startActivity(Intent(context, ProfileActivity::class.java))
-                            fullName = ""
-                            newPassword = ""
-                            confirmationNewPassword = ""
+                    if (
+                        fullNameErrorMessage == "" &&
+                        newPasswordErrorMessage == "" &&
+                        confirmationNewPasswordErrorMessage == ""
+                    ) {
+                        if (fullName == userFullName && newPassword == "") {
+                            Log.e("EDIT_PROFILE_ACTIVITY", "Kok kesini")
+                            Toast.makeText(activity, "No changes", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Log.e("EDIT_PROFILE_ACTIVITY", "Nah bener")
+                            CoroutineScope(Dispatchers.Main).launch {
+                                val success = viewModel.updateProfile(
+                                    fullName,
+                                    newPassword,
+                                    confirmationNewPassword
+                                )
+
+                                if (success) {
+                                    Toast.makeText(activity, "Successfully updated profile", Toast.LENGTH_SHORT).show()
+                                    context.startActivity(Intent(context, ProfileActivity::class.java))
+                                    fullName = ""
+                                    newPassword = ""
+                                    confirmationNewPassword = ""
+                                }
+                            }
                         }
                     }
                 }
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview6() {
-    FoodwiseMobileTheme {
-        EditProfilePage()
     }
 }
