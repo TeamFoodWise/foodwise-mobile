@@ -12,11 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CustomButton(text: String, onClick: () -> Unit, isLoading: Boolean? = false) {
+fun CustomButton(text: String, onClick: () -> Unit, isLoading: Boolean? = false, modifier: Modifier = Modifier) {
     Button(
         shape = RoundedCornerShape(8.dp),
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         enabled = !isLoading!!,
         elevation = ButtonDefaults.elevation(defaultElevation = 8.dp)
     ) {
@@ -25,7 +25,7 @@ fun CustomButton(text: String, onClick: () -> Unit, isLoading: Boolean? = false)
                 CircularProgressIndicator(
                     modifier = Modifier
                         .size(16.dp),
-                strokeWidth = 2.dp
+                    strokeWidth = 2.dp
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(text = "Processing", modifier = Modifier.padding(vertical = 2.dp))
