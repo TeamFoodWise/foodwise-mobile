@@ -25,7 +25,7 @@ fun CustomButton(text: String, onClick: () -> Unit, isLoading: Boolean? = false,
                 CircularProgressIndicator(
                     modifier = Modifier
                         .size(16.dp),
-                strokeWidth = 2.dp
+                    strokeWidth = 2.dp
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(text = "Processing", modifier = Modifier.padding(vertical = 2.dp))
