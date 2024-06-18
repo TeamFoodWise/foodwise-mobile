@@ -2,8 +2,11 @@ package bangkit.kiki.foodwisemobile.ui.inventory
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +22,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -41,16 +46,19 @@ import bangkit.kiki.foodwisemobile.ui.inventory.component.ConsumeAlertDialog
 import bangkit.kiki.foodwisemobile.ui.inventory.component.HeaderCard
 import bangkit.kiki.foodwisemobile.ui.inventory.component.InventoryItem
 import bangkit.kiki.foodwisemobile.ui.inventory.component.InventoryTabs
+import bangkit.kiki.foodwisemobile.ui.main.MainViewModel
 import bangkit.kiki.foodwisemobile.ui.theme.DarkGreen
 import bangkit.kiki.foodwisemobile.ui.theme.FoodwiseMobileTheme
 import bangkit.kiki.foodwisemobile.ui.theme.Green
 
 class InventoryActivity : ComponentActivity() {
+    private val inventoryViewModel: InventoryViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             FoodwiseMobileTheme {
-                InventoryPage()
+                InventoryPage(inventoryViewModel, this)
             }
         }
     }
@@ -58,7 +66,7 @@ class InventoryActivity : ComponentActivity() {
 
 
 @Composable
-fun InventoryPage() {
+fun InventoryPage(viewModel: InventoryViewModel, activity: ComponentActivity) {
     val data1 = listOf(
         mapOf(
             "id" to 1,
@@ -157,10 +165,23 @@ fun InventoryPage() {
     val context = LocalContext.current
 
 
+    val inventorySummary by viewModel.inventorySummary.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState(initial = true)
+
+    LaunchedEffect(viewModel.isError) {
+        viewModel.isError.observe(activity) { isError ->
+            if (isError) {
+                Toast.makeText(activity, viewModel.errorMessage.value, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     Scaffold(bottomBar = { BottomBar(currentPage = "inventory") }) { contentPadding ->
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(contentPadding)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding)
+        ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -201,7 +222,14 @@ fun InventoryPage() {
                         .offset(y = 150.dp)
                         .padding(horizontal = 30.dp)
                 ) {
-                    HeaderCard(inStockCount = 10, consumedCount = 101, expiredCount = 9)
+                    inventorySummary?.let { summary ->
+                        HeaderCard(
+                            inStockCount = summary.inStockCount,
+                            consumedCount = summary.consumedCount,
+                            expiredCount = summary.expiredCount,
+                            isLoading = isLoading
+                        )
+                    }
                 }
             }
 
@@ -241,8 +269,9 @@ fun InventoryPage() {
         ConsumeAlertDialog(
             onDismissRequest = { showDialog = false },
             onConfirm = {
-                // Call API or handle the deletion logic here
-                // For example: deleteItem(itemIdToDelete)
+                itemIdToDelete?.let {
+                    viewModel.deleteFoodItem(it)
+                }
                 showDialog = false
             },
             onCancel = { showDialog = false }
@@ -251,11 +280,10 @@ fun InventoryPage() {
 }
 
 
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewTestTopAppBar() {
-    FoodwiseMobileTheme {
-        InventoryPage()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewTestTopAppBar() {
+//    FoodwiseMobileTheme {
+//        InventoryPage()
+//    }
+//}

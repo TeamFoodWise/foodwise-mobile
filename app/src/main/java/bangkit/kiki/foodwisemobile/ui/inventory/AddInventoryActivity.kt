@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import bangkit.kiki.foodwisemobile.ui.element.CustomButton
 import bangkit.kiki.foodwisemobile.ui.element.CustomDateInput
 import bangkit.kiki.foodwisemobile.ui.element.CustomTextInput
+import bangkit.kiki.foodwisemobile.ui.element.CustomTextInputWithUnitDropdown
 import bangkit.kiki.foodwisemobile.ui.theme.DarkGreen
 import bangkit.kiki.foodwisemobile.ui.theme.FoodwiseMobileTheme
 import bangkit.kiki.foodwisemobile.ui.theme.Green
@@ -57,6 +58,7 @@ fun AddInventoryItemScreen() {
     var name by remember { mutableStateOf("") }
     var quantity by remember { mutableStateOf("") }
     var measure by remember { mutableStateOf("") }
+    var unit by remember { mutableStateOf("Gr") }
     var expiryDate by remember { mutableStateOf("") }
     var nameError by remember { mutableStateOf("") }
     var quantityError by remember { mutableStateOf("") }
@@ -73,9 +75,10 @@ fun AddInventoryItemScreen() {
 
         if (nameError.isEmpty() && quantityError.isEmpty() && measureError.isEmpty() && expiryDateError.isEmpty()) {
             // Handle the add to inventory action
-            dialogMessage =
-                "Food Name: $name\nQuantity: $quantity\nMeasure: $measure\nExpired Date: $expiryDate"
-            showDialog = true
+            if (nameError.isEmpty() && quantityError.isEmpty() && measureError.isEmpty() && expiryDateError.isEmpty()) {
+                dialogMessage = "Food Name: $name\nQuantity: $quantity $unit\nMeasure: $measure\nExpired Date: $expiryDate"
+                showDialog = true
+            }
         }
     }
 
@@ -122,45 +125,13 @@ fun AddInventoryItemScreen() {
                     }
                 }
             }
-            Column(modifier = Modifier.padding(16.dp).fillMaxSize()) {
-                CustomTextInput(
-                    value = name,
-                    onValueChange = { name = it },
-                    title = "Food Name",
-                    errorMessage = nameError
-                )
-
-                CustomTextInput(
-                    value = quantity,
-                    onValueChange = { quantity = it },
-                    title = "Quantity",
-                    errorMessage = quantityError,
-                    type = "number"
-                )
-
-                CustomTextInput(
-                    value = measure,
-                    onValueChange = { measure = it },
-                    title = "Measure per Quantity",
-                    placeholder = "e.g. 500 gr, 200 ml",
-                    errorMessage = measureError
-                )
-
-                CustomDateInput(
-                    value = expiryDate,
-                    onValueChange = { expiryDate = it },
-                    title = "Expired Date",
-                    errorMessage = expiryDateError
-                )
-
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                CustomButton(
-                    text = "Add to Inventory",
-                    onClick = { validateFields() }
-                )
-            }
+            Form(
+                name, quantity, measure, expiryDate,
+                nameError, quantityError, measureError, expiryDateError,
+                { name = it }, { quantity = it }, { measure = it }, { expiryDate = it },
+                unit, { unit = it },
+                onAddInventoryClick = { validateFields() }  // Pass validateFields here
+            )
 
             if (showDialog) {
                 AlertDialog(
@@ -178,3 +149,21 @@ fun AddInventoryItemScreen() {
     }
 }
 
+@Composable
+fun Form(
+    name: String, quantity: String, measure: String, expiryDate: String,
+    nameError: String, quantityError: String, measureError: String, expiryDateError: String,
+    onNameChange: (String) -> Unit, onQuantityChange: (String) -> Unit,
+    onMeasureChange: (String) -> Unit, onExpiryDateChange: (String) -> Unit,
+    selectedUnit: String, onUnitChange: (String) -> Unit,
+    onAddInventoryClick: () -> Unit  // Accepting the function here
+) {
+    Column(modifier = Modifier.padding(16.dp).fillMaxSize()) {
+        CustomTextInput(value = name, onValueChange = onNameChange, title = "Food Name", errorMessage = nameError)
+        CustomTextInput(value = quantity, onValueChange = onQuantityChange, title = "Quantity", errorMessage = quantityError, type = "number")
+        CustomTextInputWithUnitDropdown(value = measure, onValueChange = onMeasureChange, title = "Measure per Quantity", type = "number", errorMessage = measureError, selectedUnit = selectedUnit, onUnitChange = onUnitChange)
+        CustomDateInput(value = expiryDate, onValueChange = onExpiryDateChange, title = "Expired Date", errorMessage = expiryDateError)
+        Spacer(modifier = Modifier.height(16.dp))
+        CustomButton(text = "Add to Inventory", onClick = onAddInventoryClick)
+    }
+}
