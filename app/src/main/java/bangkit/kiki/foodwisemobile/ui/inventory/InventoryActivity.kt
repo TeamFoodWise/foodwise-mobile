@@ -167,6 +167,7 @@ fun InventoryPage(viewModel: InventoryViewModel, activity: ComponentActivity) {
 
     val inventorySummary by viewModel.inventorySummary.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState(initial = true)
+    val isDeleting by viewModel.isDeleting.collectAsState()
 
     LaunchedEffect(viewModel.isError) {
         viewModel.isError.observe(activity) { isError ->
@@ -175,6 +176,7 @@ fun InventoryPage(viewModel: InventoryViewModel, activity: ComponentActivity) {
             }
         }
     }
+
 
     Scaffold(bottomBar = { BottomBar(currentPage = "inventory") }) { contentPadding ->
         Column(
@@ -267,15 +269,25 @@ fun InventoryPage(viewModel: InventoryViewModel, activity: ComponentActivity) {
 
     if (showDialog) {
         ConsumeAlertDialog(
-            onDismissRequest = { showDialog = false },
+            onDismissRequest = {
+                if (!isDeleting) showDialog = false
+            },
             onConfirm = {
                 itemIdToDelete?.let {
                     viewModel.deleteFoodItem(it)
                 }
-                showDialog = false
             },
-            onCancel = { showDialog = false }
+            onCancel = {
+                if (!isDeleting) showDialog = false
+            },
+            isDeleting = isDeleting
         )
+    }
+
+    LaunchedEffect(isDeleting) {
+        if (!isDeleting && showDialog) {
+            showDialog = false
+        }
     }
 }
 

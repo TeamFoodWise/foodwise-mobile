@@ -1,5 +1,6 @@
 package bangkit.kiki.foodwisemobile.data.api
 
+import bangkit.kiki.foodwisemobile.data.dataClass.DeleteItemRequest
 import bangkit.kiki.foodwisemobile.data.dataClass.LoginRegisterResponse
 import bangkit.kiki.foodwisemobile.data.model.ExpiringFoodResponse
 import bangkit.kiki.foodwisemobile.data.model.UserInventoryResponse
@@ -55,13 +56,13 @@ interface ApiService {
     suspend fun createItem(
         @Field("name") name: String,
         @Field("quantity") quantity: Int,
-        @Field("category") category: String,
+        @Field("type") type: String,
         @Field("measure") measure: String,
-        @Field("expiration_date") expirationDate: String
+        @Field("expiredAt") expirationDate: String
     ): CreateItemResponse
 
-    @HTTP(method = "DELETE", path = "BASE_ITEM_URL", hasBody = true)
-    suspend fun deleteItem(@Body id: Int): DeleteItemResponse
+    @HTTP(method = "DELETE", path = BASE_ITEM_URL, hasBody = true)
+    suspend fun deleteItem(@Body requestBody: DeleteItemRequest): DeleteItemResponse
 
     companion object {
         const val BASE_AUTH_URL = "api/auth/"

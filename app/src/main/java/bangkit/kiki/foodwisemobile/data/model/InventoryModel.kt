@@ -25,7 +25,7 @@ data class CreateItemResponse(
     @field:SerializedName("message")
     val message: String? = null,
 
-    val food: FoodItemModel
+    val item: FoodItemModel
 )
 
 data class DeleteItemResponse(

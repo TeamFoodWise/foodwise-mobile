@@ -1,11 +1,11 @@
 package bangkit.kiki.foodwisemobile.ui.inventory
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import bangkit.kiki.foodwisemobile.data.api.ApiConfig
+import bangkit.kiki.foodwisemobile.data.dataClass.DeleteItemRequest
 import bangkit.kiki.foodwisemobile.data.model.InventorySummaryModel
 import bangkit.kiki.foodwisemobile.data.model.FoodItemModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +23,9 @@ class InventoryViewModel : ViewModel() {
 
     private val _errorMessage = MutableLiveData("")
     val errorMessage: LiveData<String> = _errorMessage
+
+    private val _isDeleting = MutableStateFlow(false)
+    val isDeleting: StateFlow<Boolean> = _isDeleting
 
     private val _inventorySummary = MutableStateFlow<InventorySummaryModel?>(
         InventorySummaryModel(
@@ -84,11 +87,11 @@ class InventoryViewModel : ViewModel() {
 //    }
 
     fun deleteFoodItem(itemId: Int) {
-        _isLoading.value = true
+        _isDeleting.value = true
         _isError.value = false
         viewModelScope.launch {
             try {
-                ApiConfig.getApiService().deleteItem(itemId)
+                ApiConfig.getApiService().deleteItem(DeleteItemRequest(itemId.toString()))
                 val updatedList = _foodItems.value?.filter { it.id != itemId }
                 _foodItems.value = updatedList
             } catch (error: SocketTimeoutException) {
@@ -98,7 +101,7 @@ class InventoryViewModel : ViewModel() {
                 _errorMessage.value = error.response()?.errorBody()?.string() ?: "An error occurred"
                 _isError.value = true
             } finally {
-                _isLoading.value = false
+                _isDeleting.value = false
             }
         }
     }
