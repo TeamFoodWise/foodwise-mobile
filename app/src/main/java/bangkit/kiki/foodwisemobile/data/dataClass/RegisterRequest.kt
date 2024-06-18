@@ -5,14 +5,14 @@ import com.google.gson.annotations.SerializedName
 data class RegisterRequest(
 
 	@field:SerializedName("full_name")
-	val fullName: String? = null,
+	val fullName: String,
 
 	@field:SerializedName("email")
-	val email: String? = null,
+	val email: String,
 
 	@field:SerializedName("password")
-	val password: String? = null,
+	val password: String,
 
 	@field:SerializedName("confirm_password")
-	val confirmPassword: String? = null
+	val confirmPassword: String
 )
