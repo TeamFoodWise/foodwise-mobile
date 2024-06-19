@@ -14,6 +14,8 @@ data class FoodItemModel(
     val name: String,
     val quantity: Int,
     val measure: String,
+    val unit: String,
+    @field:SerializedName("expiration_date")
     val expiredAt: String
 )
 

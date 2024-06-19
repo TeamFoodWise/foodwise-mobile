@@ -14,7 +14,7 @@ import bangkit.kiki.foodwisemobile.ui.theme.Black
 import bangkit.kiki.foodwisemobile.ui.theme.Green
 
 @Composable
-fun HeaderSection() {
+fun HeaderSection(userFullName: String, userEmail: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -30,7 +30,7 @@ fun HeaderSection() {
         )
 
         Text(
-            text = "Ravandra Rifaqinara!",
+            text = userFullName,
             style = TextStyle(
                 fontSize = 24.sp,
                 color = Green,
@@ -39,7 +39,7 @@ fun HeaderSection() {
         )
 
         Text(
-            text = "ravandra@mail.com",
+            text = userEmail,
             style = TextStyle(
                 fontSize = 16.sp,
                 color = Black,

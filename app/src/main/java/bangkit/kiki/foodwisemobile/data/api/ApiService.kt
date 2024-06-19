@@ -1,23 +1,13 @@
 package bangkit.kiki.foodwisemobile.data.api
 
-import bangkit.kiki.foodwisemobile.data.dataClass.LoginRegisterResponse
-import bangkit.kiki.foodwisemobile.data.dataClass.LoginRequest
-import bangkit.kiki.foodwisemobile.data.dataClass.RegisterRequest
-import bangkit.kiki.foodwisemobile.data.dataClass.UpdateProfileRequest
-import bangkit.kiki.foodwisemobile.data.dataClass.UpdateProfileResponse
-import bangkit.kiki.foodwisemobile.data.dataClass.DeleteItemRequest
+import bangkit.kiki.foodwisemobile.data.model.*
 import retrofit2.http.Body
-import bangkit.kiki.foodwisemobile.data.model.ExpiringFoodResponse
-import bangkit.kiki.foodwisemobile.data.model.UserInventoryResponse
-import bangkit.kiki.foodwisemobile.data.model.CreateItemResponse
-import bangkit.kiki.foodwisemobile.data.model.DeleteItemResponse
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
-import retrofit2.http.HTTP
+import bangkit.kiki.foodwisemobile.data.dataClass.*
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Query
 
 interface ApiService {
     // Authentication
@@ -33,10 +23,10 @@ interface ApiService {
 
     // Homepage
     @GET("${BASE_USER_URL}statistics")
-    suspend fun getStatistic(): UserInventoryResponse
+    suspend fun getStatistic(@Header("Authorization") token: String): UserInventoryResponse
 
     @GET("${BASE_ITEM_URL}expiring-soon")
-    suspend fun getExpiringSoon(): ExpiringFoodResponse
+    suspend fun getExpiringSoon(@Header("Authorization") token: String): ExpiringFoodResponse
 
     //  Profile
     @PUT("${BASE_AUTH_URL}update-profile")
@@ -46,22 +36,30 @@ interface ApiService {
     ): UpdateProfileResponse
 
     // Inventory
-    @FormUrlEncoded
     @POST(BASE_ITEM_URL)
     suspend fun createItem(
-        @Field("name") name: String,
-        @Field("quantity") quantity: Int,
-        @Field("type") type: String,
-        @Field("measure") measure: String,
-        @Field("expiredAt") expirationDate: String
+        @Header("Authorization") token: String,
+        @Body request: CreateItemRequest
     ): CreateItemResponse
 
-    @HTTP(method = "DELETE", path = BASE_ITEM_URL, hasBody = true)
-    suspend fun deleteItem(@Body requestBody: DeleteItemRequest): DeleteItemResponse
+    @POST(BASE_INVENTORY_URL)
+    suspend fun deleteItem(
+        @Header("Authorization") token: String,
+        @Body requestBody: DeleteItemRequest
+    ): DeleteItemResponse
+
+    @GET(BASE_ITEM_URL)
+    suspend fun getItems(
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("type") type: Int,
+        @Header("Authorization") token: String
+    ): FoodResponse
 
     companion object {
         const val BASE_AUTH_URL = "api/auth/"
-        const val BASE_USER_URL = "api/user/"
+        const val BASE_USER_URL = "api/users/"
         const val BASE_ITEM_URL = "api/items/"
+        const val BASE_INVENTORY_URL = "api/consumptions/"
     }
 }
