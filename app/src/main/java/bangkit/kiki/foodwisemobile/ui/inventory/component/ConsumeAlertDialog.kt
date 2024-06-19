@@ -1,20 +1,15 @@
 package bangkit.kiki.foodwisemobile.ui.inventory.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,9 +25,12 @@ import bangkit.kiki.foodwisemobile.ui.theme.LightGrey
 fun ConsumeAlertDialog(
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
-    onCancel: () -> Unit
+    onCancel: () -> Unit,
+    isDeleting: Boolean
 ) {
-    Dialog(onDismissRequest = onDismissRequest) {
+    Dialog(onDismissRequest = {
+        if (!isDeleting) onDismissRequest()
+    }) {
         Surface(
             shape = RoundedCornerShape(16.dp),
             color = Color.White
@@ -66,6 +64,7 @@ fun ConsumeAlertDialog(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     FilledTonalButton(
+                        enabled = !isDeleting,
                         onClick = onCancel,
                         colors = ButtonDefaults.filledTonalButtonColors(
                             containerColor = LightGrey,
@@ -81,11 +80,20 @@ fun ConsumeAlertDialog(
                     Button(
                         onClick = onConfirm,
                         colors = ButtonDefaults.buttonColors(Color.Red),
+                        enabled = !isDeleting,
                         modifier = Modifier
                             .weight(1f)
                             .padding(4.dp)
                     ) {
-                        Text(text = "Consume", color = Color.White)
+                        if (isDeleting) {
+                            CircularProgressIndicator(
+                                Modifier.size(16.dp),
+                                color = Color.White,
+                                strokeWidth = 2.dp
+                            )
+                        } else {
+                            Text(text = "Consume", color = Color.White)
+                        }
                     }
                 }
             }

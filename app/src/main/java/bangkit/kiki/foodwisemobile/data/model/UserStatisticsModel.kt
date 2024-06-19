@@ -1,19 +1,21 @@
 package bangkit.kiki.foodwisemobile.data.model
 
-data class UserInventoryModel(
-    val consumedCount: Int,
-    val inStockCount: Int,
-    val expiredCount: Int,
-    val currentProgress: Int, // current progress in percentage
-    val remainingDays: Int, // remaining days in the current month cycle
-    val historyProgress: Int? // history progress in percentage, nullable
+import com.google.gson.annotations.SerializedName
+
+data class UserInventoryResponse(
+    @SerializedName("consumed_count") val consumedCount: Int,
+    @SerializedName("in_stock_count") val inStockCount: Int,
+    @SerializedName("expired_count") val expiredCount: Int,
+    @SerializedName("current_progress") val currentProgress: Float, // current progress in percentage
+    @SerializedName("remaining_days") val remainingDays: Int, // remaining days in the current month cycle
+    @SerializedName("history_progress") val historyProgress: Float? // history progress in percentage, nullable
 )
 
 data class ExpiringFood(
     val name: String,
-    val remainingDays: Int
+    @SerializedName("remaining_days") val remainingDays: Int
 )
 
 data class ExpiringFoodResponse(
-    val foods: List<ExpiringFood>
+    @SerializedName("food_item") val foods: List<ExpiringFood>
 )

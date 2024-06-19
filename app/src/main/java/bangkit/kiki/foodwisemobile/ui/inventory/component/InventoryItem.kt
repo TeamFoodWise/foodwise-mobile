@@ -32,6 +32,7 @@ fun InventoryItem(
     expiryDate: String,
     quantity: Number,
     measure: String,
+    unit: String,
     showIconButton: Boolean,
     onDeleteClick: (Int) -> Unit
 ) {
@@ -70,7 +71,7 @@ fun InventoryItem(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(name, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                Text(measure, fontSize = 16.sp)
+                Text("$measure $unit", fontSize = 16.sp)
                 Text("Expired at $expiryDate", fontSize = 14.sp, color = Color.Gray)
             }
             if (showIconButton) {

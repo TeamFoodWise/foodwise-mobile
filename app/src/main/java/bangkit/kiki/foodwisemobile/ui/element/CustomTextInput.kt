@@ -46,7 +46,7 @@ fun CustomTextInput(
                     )
                 }
             },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = if (type == "number") KeyboardType.Number else if (type == "password") KeyboardType.Password else KeyboardType.Text),
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = if (passwordVisible || type != "password") VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
