@@ -4,8 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import bangkit.kiki.foodwisemobile.data.api.ApiConfig
+import bangkit.kiki.foodwisemobile.data.dataClass.ErrorResponse
+import bangkit.kiki.foodwisemobile.data.dataClass.LoginRequest
 import bangkit.kiki.foodwisemobile.data.model.UserModel
 import bangkit.kiki.foodwisemobile.data.repository.UserRepository
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import retrofit2.HttpException
@@ -25,7 +28,8 @@ class LoginViewModel(private val repository: UserRepository): ViewModel() {
         _isError.value = false
 
         try {
-            val response = ApiConfig.getApiService().login(email, password)
+            val response = ApiConfig.getApiService().login(
+                LoginRequest(email, password))
 
             if (
                 (response.accessToken != null) &&
@@ -52,7 +56,9 @@ class LoginViewModel(private val repository: UserRepository): ViewModel() {
             return false
         } catch (error: HttpException) {
             val jsonInString = error.response()?.errorBody()?.string()
-            _errorMessage.value = jsonInString
+            val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
+
+            _errorMessage.value = errorBody.error
             _isError.value = true
         } finally {
             _isLoading.value = false

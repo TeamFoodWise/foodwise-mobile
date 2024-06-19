@@ -66,6 +66,18 @@ fun ExpiringSection(
                         color = LightGrey,
                     ),
                 )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(280.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.empty_item),
+                        contentDescription = "Empty Item",
+                        modifier = Modifier.size(220.dp)
+                    )
+                }
             } else {
                 Text(
                     text = "Eat your food before it expires in",

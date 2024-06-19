@@ -37,6 +37,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import bangkit.kiki.foodwisemobile.ui.ViewModelFactory
 import bangkit.kiki.foodwisemobile.ui.element.CustomButton
 import bangkit.kiki.foodwisemobile.ui.element.CustomDateInput
 import bangkit.kiki.foodwisemobile.ui.element.CustomTextInput
@@ -46,7 +47,9 @@ import bangkit.kiki.foodwisemobile.ui.theme.FoodwiseMobileTheme
 import bangkit.kiki.foodwisemobile.ui.theme.Green
 
 class AddInventoryActivity : ComponentActivity() {
-    private val inventoryViewModel: AddInventoryViewModel by viewModels()
+    private val inventoryViewModel by viewModels<AddInventoryViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

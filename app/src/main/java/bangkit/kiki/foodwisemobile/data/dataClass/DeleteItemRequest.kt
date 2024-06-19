@@ -3,7 +3,8 @@ package bangkit.kiki.foodwisemobile.data.dataClass
 import com.google.gson.annotations.SerializedName
 
 data class DeleteItemRequest(
+	@field:SerializedName("item_id")
+	val id: Int,
 
-	@field:SerializedName("id")
-	val id: String? = null
+	val quantity: Int
 )

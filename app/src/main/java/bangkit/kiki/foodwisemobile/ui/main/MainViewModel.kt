@@ -7,13 +7,15 @@ import androidx.lifecycle.viewModelScope
 import bangkit.kiki.foodwisemobile.data.api.ApiConfig
 import bangkit.kiki.foodwisemobile.data.model.ExpiringFoodResponse
 import bangkit.kiki.foodwisemobile.data.model.UserInventoryResponse
+import bangkit.kiki.foodwisemobile.data.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 
-class MainViewModel : ViewModel() {
+class MainViewModel(private val repository: UserRepository) : ViewModel() {
+
     private val _isLoadingStatistics = MutableStateFlow(false)
     val isLoadingStatistics: StateFlow<Boolean> get() = _isLoadingStatistics
 
@@ -42,7 +44,7 @@ class MainViewModel : ViewModel() {
         _isError.value = false
         viewModelScope.launch {
             try {
-                val response = ApiConfig.getApiService().getStatistic()
+                val response = ApiConfig.getApiService().getStatistic(token = "Bearer ${repository.getAccessToken()}")
                 _userInventory.value = response
             } catch (error: SocketTimeoutException) {
                 _errorMessage.value = "Request timed out. Please try again later."
@@ -61,7 +63,7 @@ class MainViewModel : ViewModel() {
         _isError.value = false
         viewModelScope.launch {
             try {
-                val response = ApiConfig.getApiService().getExpiringSoon()
+                val response = ApiConfig.getApiService().getExpiringSoon(token = "Bearer ${repository.getAccessToken()}")
                 _expiringFoodResponse.value = response
             } catch (error: SocketTimeoutException) {
                 _errorMessage.value = "Request timed out. Please try again later."

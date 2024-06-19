@@ -22,28 +22,46 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import bangkit.kiki.foodwisemobile.ui.ViewModelFactory
 import bangkit.kiki.foodwisemobile.ui.element.BottomBar
 import bangkit.kiki.foodwisemobile.ui.main.component.LineSpacer
 import bangkit.kiki.foodwisemobile.ui.main.section.ExpiringSection
 import bangkit.kiki.foodwisemobile.ui.main.section.HeaderSection
 import bangkit.kiki.foodwisemobile.ui.main.section.InventoryStatisticsSection
+import bangkit.kiki.foodwisemobile.ui.profile.ProfileViewModel
 import bangkit.kiki.foodwisemobile.ui.theme.FoodwiseMobileTheme
 
 
 class MainActivity : ComponentActivity() {
-    private val mainViewModel: MainViewModel by viewModels()
+    private val mainViewModel by viewModels<MainViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
+
+    private val profileViewModel by viewModels<ProfileViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
+
+    private lateinit var userFullName: String
+    private lateinit var userEmail: String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars =
             true
+
+        profileViewModel.getSession().observe(this) { user ->
+            userFullName = user.fullName
+            userEmail = user.email
+        }
+
         setContent {
             FoodwiseMobileTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    HomePage(viewModel = mainViewModel, activity = this)
+                    HomePage(viewModel = mainViewModel, activity = this, userFullName, userEmail)
                 }
             }
         }
@@ -51,7 +69,12 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun HomePage(viewModel: MainViewModel, activity: ComponentActivity) {
+fun HomePage(
+    viewModel: MainViewModel,
+    activity: ComponentActivity,
+    userFullName: String,
+    userEmail: String
+) {
     val isLoadingStatistics by viewModel.isLoadingStatistics.collectAsState()
     val isLoadingExpiring by viewModel.isLoadingExpiring.collectAsState()
 
@@ -67,8 +90,8 @@ fun HomePage(viewModel: MainViewModel, activity: ComponentActivity) {
     val expiringFoodResponse = viewModel.expiringFoodResponse.collectAsState()
 
     val statisticItems = listOf(
-        "Consumed" to (userInventory.value?.consumedCount ?: 0),
         "In Stock" to (userInventory.value?.inStockCount ?: 0),
+        "Consumed" to (userInventory.value?.consumedCount ?: 0),
         "Expired" to (userInventory.value?.expiredCount ?: 0)
     )
 
@@ -82,7 +105,7 @@ fun HomePage(viewModel: MainViewModel, activity: ComponentActivity) {
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            HeaderSection()
+            HeaderSection(userFullName, userEmail)
 
             InventoryStatisticsSection(
                 userInventory = userInventory.value,
