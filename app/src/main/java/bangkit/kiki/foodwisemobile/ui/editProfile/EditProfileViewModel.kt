@@ -5,8 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import bangkit.kiki.foodwisemobile.data.api.ApiConfig
+import bangkit.kiki.foodwisemobile.data.dataClass.ErrorResponse
+import bangkit.kiki.foodwisemobile.data.dataClass.UpdateProfileRequest
 import bangkit.kiki.foodwisemobile.data.model.UserModel
 import bangkit.kiki.foodwisemobile.data.repository.UserRepository
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import retrofit2.HttpException
@@ -35,9 +38,12 @@ class EditProfileViewModel(private val repository: UserRepository): ViewModel() 
 
         try {
             val response = ApiConfig.getApiService().updateProfile(
-                fullName,
-                newPassword,
-                confirmationNewPassword
+                token = "Bearer ${repository.getAccessToken()}",
+                UpdateProfileRequest(
+                    fullName,
+                    newPassword,
+                    confirmationNewPassword
+                )
             )
 
             if (
@@ -65,7 +71,9 @@ class EditProfileViewModel(private val repository: UserRepository): ViewModel() 
             return false
         } catch (error: HttpException) {
             val jsonInString = error.response()?.errorBody()?.string()
-            _errorMessage.value = jsonInString
+            val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
+
+            _errorMessage.value = errorBody.error
             _isError.value = true
         } finally {
             _isLoading.value = false
