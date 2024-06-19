@@ -56,12 +56,8 @@ fun RecipeRecommendationCard(item: RecipeRecommendationModel) {
                 .clickable {
                     val intent = Intent(context, RecipeRecommendationDetailActivity::class.java)
                     intent.putExtra(RecipeRecommendationDetailActivity.EXTRA_RECIPE_ID, item.id)
-                    context.startActivity(
-                        Intent(
-                            context,
-                            RecipeRecommendationDetailActivity::class.java
-                        )
-                    )
+                    context.startActivity(intent)
+
                 }
         ) {
             Column {

@@ -2,6 +2,7 @@ package bangkit.kiki.foodwisemobile.ui.recipesRecommendation
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -14,6 +15,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.getValue
@@ -56,7 +58,7 @@ class RecipesRecommendationActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    RecipesRecommendationPage(viewModel)
+                    RecipesRecommendationPage(viewModel = viewModel, activity = this)
                 }
             }
         }
@@ -64,10 +66,18 @@ class RecipesRecommendationActivity : ComponentActivity() {
 }
 
 @Composable
-fun RecipesRecommendationPage(viewModel: RecipesRecommendationViewModel) {
+fun RecipesRecommendationPage(viewModel: RecipesRecommendationViewModel, activity: ComponentActivity) {
     val isLoading by viewModel.isLoading.collectAsState()
     val listRecipes by viewModel.listRecipes.observeAsState()
     val context = LocalContext.current
+
+    LaunchedEffect(viewModel.isError) {
+        viewModel.isError.observe(activity) { isError ->
+            if (isError) {
+                Toast.makeText(activity, viewModel.errorMessage.value, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     Scaffold(bottomBar = { BottomBar(currentPage = "recipes") }) { innerPadding ->
         Box(
