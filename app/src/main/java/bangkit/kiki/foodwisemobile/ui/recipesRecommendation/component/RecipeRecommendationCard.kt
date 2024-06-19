@@ -84,10 +84,10 @@ fun RecipeRecommendationCard(item: RecipeRecommendationModel) {
                         text = item.name,
                         color = Black,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
+                        fontSize = 18.sp
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
                         text = ingredientsString,
@@ -97,7 +97,7 @@ fun RecipeRecommendationCard(item: RecipeRecommendationModel) {
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }
 
