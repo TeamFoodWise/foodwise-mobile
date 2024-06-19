@@ -4,46 +4,60 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.SentimentDissatisfied
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import bangkit.kiki.foodwisemobile.data.model.RecipeRecommendationModel
+import bangkit.kiki.foodwisemobile.ui.ViewModelFactory
 import bangkit.kiki.foodwisemobile.ui.element.BottomBar
-import bangkit.kiki.foodwisemobile.ui.recipeRecommendationDetail.RecipeRecommendationDetailActivity
-import bangkit.kiki.foodwisemobile.ui.theme.Black
+import bangkit.kiki.foodwisemobile.ui.element.CustomButton
+import bangkit.kiki.foodwisemobile.ui.inventory.InventoryActivity
+import bangkit.kiki.foodwisemobile.ui.recipesRecommendation.component.RecipeRecommendationCard
+import bangkit.kiki.foodwisemobile.ui.theme.DarkGrey
 import bangkit.kiki.foodwisemobile.ui.theme.FoodwiseMobileTheme
-import bangkit.kiki.foodwisemobile.ui.theme.Green
-import bangkit.kiki.foodwisemobile.ui.theme.White
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class RecipesRecommendationActivity : ComponentActivity() {
+    private val viewModel by viewModels<RecipesRecommendationViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = true
+
+        CoroutineScope(Dispatchers.Main).launch {
+            viewModel.getRecipesRecommendation()
+        }
+
         setContent {
             FoodwiseMobileTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    RecipesRecommendationPage()
+                    RecipesRecommendationPage(viewModel)
                 }
             }
         }
@@ -51,159 +65,77 @@ class RecipesRecommendationActivity : ComponentActivity() {
 }
 
 @Composable
-fun RecipeRecommendationCard(item: RecipeRecommendationModel) {
+fun RecipesRecommendationPage(viewModel: RecipesRecommendationViewModel) {
+    val isLoading by viewModel.isLoading.collectAsState()
+    val listRecipes by viewModel.listRecipes.observeAsState()
     val context = LocalContext.current
 
-    val ingredientsString = item.ingredients.joinToString(
-        separator = ", ",
-        limit = item.ingredients.size,
-        truncated = ""
-    ) { ingredient ->
-        if (ingredient == item.ingredients.first()) ingredient else if (ingredient == item.ingredients.last()) "and ${ingredient.lowercase()}" else ingredient.lowercase()
-    }
-
-    Column {
+    Scaffold(bottomBar = { BottomBar(currentPage = "recipes") }) { innerPadding ->
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .shadow(
-                    elevation = 2.dp,
-                    shape = RoundedCornerShape(8.dp),
-                    clip = false
-                )
-                .background(
-                    White,
-                    RoundedCornerShape(8.dp)
-                )
-                .border(
-                    width = 1.dp,
-                    color = Color(android.graphics.Color.parseColor("#D9D9D9")),
-                    shape = RoundedCornerShape(8.dp)
-                )
-                .padding(16.dp)
-                .clickable {
-                    val intent = Intent(context, RecipeRecommendationDetailActivity::class.java)
-                    intent.putExtra(RecipeRecommendationDetailActivity.EXTRA_RECIPE_ID, item.id)
-                    context.startActivity(Intent(context, RecipeRecommendationDetailActivity::class.java))
-                }
-        ) {
-            Column {
-                Box(
-                    modifier = Modifier
-                        .background(
-                            Green, RoundedCornerShape(8.dp)
-                        )
-                        .padding(8.dp)
-                ) {
-                    Text(text = item.category, color = White)
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = item.name,
-                    color = Black,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = ingredientsString,
-                    color = Black
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-    }
-}
-
-@Composable
-fun RecipesRecommendationPage() {
-    Scaffold(bottomBar = { BottomBar(currentPage = "recipes") }) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(innerPadding),
+            contentAlignment = Alignment.Center
         ) {
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-
-                RecipeRecommendationCard(
-                    item = RecipeRecommendationModel(
-                        id = "item-1",
-                        name = "Chicken Curry",
-                        category = "Makanan",
-                        ingredients = listOf("Chicken", "Coconut milk", "Shallots", "Garlic")
-                    )
-                )
-
-                RecipeRecommendationCard(
-                    item = RecipeRecommendationModel(
-                        id = "item-2",
-                        name = "Chicken Curry",
-                        category = "Makanan",
-                        ingredients = listOf("Chicken", "Coconut milk", "Shallots", "Garlic")
-                    )
-                )
-
-                RecipeRecommendationCard(
-                    item = RecipeRecommendationModel(
-                        id = "item-3",
-                        name = "Chicken Curry",
-                        category = "Makanan",
-                        ingredients = listOf("Chicken", "Coconut milk", "Shallots", "Garlic")
-                    )
-                )
-
-                RecipeRecommendationCard(
-                    item = RecipeRecommendationModel(
-                        id = "item-4",
-                        name = "Chicken Curry",
-                        category = "Makanan",
-                        ingredients = listOf("Chicken", "Coconut milk", "Shallots", "Garlic")
-                    )
-                )
-
-                RecipeRecommendationCard(
-                    item = RecipeRecommendationModel(
-                        id = "item-5",
-                        name = "Chicken Curry",
-                        category = "Makanan",
-                        ingredients = listOf("Chicken", "Coconut milk", "Shallots", "Garlic")
-                    )
-                )
-
-                RecipeRecommendationCard(
-                    item = RecipeRecommendationModel(
-                        id = "item-6",
-                        name = "Chicken Curry",
-                        category = "Makanan",
-                        ingredients = listOf("Chicken", "Coconut milk", "Shallots", "Garlic")
-                    )
-                )
-
-                RecipeRecommendationCard(
-                    item = RecipeRecommendationModel(
-                        id = "item-7",
-                        name = "Chicken Curry",
-                        category = "Makanan",
-                        ingredients = listOf("Chicken", "Coconut milk", "Shallots", "Garlic")
-                    )
-                )
+            if (isLoading) {
+                CircularProgressIndicator()
+            } else {
+                listRecipes?.let { recipes ->
+                    if (recipes.isNotEmpty()) {
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            items(recipes.size) { index ->
+                                val recipe = recipes[index]
+                                Spacer(modifier = Modifier.height(16.dp))
+                                recipe.id?.let {
+                                    recipe.name?.let { it1 ->
+                                        RecipeRecommendationModel(
+                                            id = it,
+                                            name = it1,
+                                            ingredients = recipe.ingredients as List<String>
+                                        )
+                                    }
+                                }?.let {
+                                    RecipeRecommendationCard(
+                                        item = it
+                                    )
+                                }
+                            }
+                        }
+                    } else {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.SentimentDissatisfied,
+                                contentDescription = null,
+                                tint = DarkGrey,
+                                modifier = Modifier.size(64.dp)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "You don't have any items in your inventory, let's update your inventory!",
+                                fontSize = 16.sp,
+                                color = DarkGrey,
+                                textAlign = TextAlign.Center
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            CustomButton(
+                                text = "Update Inventory",
+                                onClick = { context.startActivity(Intent(context, InventoryActivity::class.java)) }
+                            )
+                        }
+                    }
+                }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview7() {
-    FoodwiseMobileTheme {
-        RecipesRecommendationPage()
     }
 }

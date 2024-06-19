@@ -2,6 +2,7 @@ package bangkit.kiki.foodwisemobile.data.api
 
 import bangkit.kiki.foodwisemobile.data.dataClass.*
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -24,7 +25,13 @@ interface ApiService {
         @Body request: UpdateProfileRequest
     ): UpdateProfileResponse
 
+    @GET("${BASE_RECIPES_URL}recommendation")
+    suspend fun recipesRecommendation(
+        @Header("Authorization") token: String
+    ): RecipesRecommendationResponse
+
     companion object {
         const val BASE_AUTH_URL = "api/auth/"
+        const val BASE_RECIPES_URL = "api/recipes/"
     }
 }

@@ -8,6 +8,7 @@ import bangkit.kiki.foodwisemobile.data.repository.UserRepository
 import bangkit.kiki.foodwisemobile.ui.editProfile.EditProfileViewModel
 import bangkit.kiki.foodwisemobile.ui.login.LoginViewModel
 import bangkit.kiki.foodwisemobile.ui.profile.ProfileViewModel
+import bangkit.kiki.foodwisemobile.ui.recipesRecommendation.RecipesRecommendationViewModel
 import bangkit.kiki.foodwisemobile.ui.register.RegisterViewModel
 import bangkit.kiki.foodwisemobile.ui.splash.SplashViewModel
 
@@ -29,6 +30,9 @@ class ViewModelFactory(private val repository: UserRepository): ViewModelProvide
             }
             modelClass.isAssignableFrom(EditProfileViewModel::class.java) -> {
                 EditProfileViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(RecipesRecommendationViewModel::class.java) -> {
+                RecipesRecommendationViewModel(repository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }

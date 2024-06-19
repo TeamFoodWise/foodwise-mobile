@@ -44,7 +44,7 @@ class RecipeRecommendationDetailActivity : ComponentActivity() {
 @Composable
 fun RecipeRecommendationDetailPage() {
     val item = RecipeRecommendationDetailModel(
-        id = "item-1",
+        id = 123,
         name = "Chicken Curry",
         ingredients = listOf("Chicken", "Coconut milk", "Shallots", "Garlic"),
         steps = listOf("Put the chicken", "Put the chicken", "Put the chicken", "Put the chicken")
