@@ -2,7 +2,6 @@ package bangkit.kiki.foodwisemobile.data.api
 
 import bangkit.kiki.foodwisemobile.data.model.*
 import retrofit2.http.Body
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import bangkit.kiki.foodwisemobile.data.dataClass.*
 import retrofit2.http.Header
@@ -30,7 +29,6 @@ interface ApiService {
     suspend fun getExpiringSoon(@Header("Authorization") token: String): ExpiringFoodResponse
 
     //  Profile
-    @FormUrlEncoded
     @PUT("${BASE_AUTH_URL}update-profile")
     suspend fun updateProfile(
         @Header("Authorization") token: String,
