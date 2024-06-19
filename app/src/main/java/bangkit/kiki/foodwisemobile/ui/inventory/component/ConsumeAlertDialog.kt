@@ -46,7 +46,7 @@ fun ConsumeAlertDialog(
                     text = "Confirm Consume Item",
                     style = TextStyle(
                         fontSize = 20.sp,
-                        color = DarkGreen,
+                        color = Color.Black,
                         fontWeight = FontWeight.Bold
                     ),
                     modifier = Modifier.padding(vertical = 16.dp)
