@@ -54,15 +54,17 @@ fun InventoryStatisticsSection(
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    CircularProgressBar(percentage = it.currentProgress.toFloat())
+                    CircularProgressBar(percentage = it.currentProgress)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    text = "Achieve 100% progress in ${it.remainingDays} days to ensure no food or drink is wasted.",
-                    fontSize = 14.sp,
-                )
+                if (statisticItems.any { item -> item.second > 0 }) {
+                    Text(
+                        text = "Achieve 100% progress in ${it.remainingDays} days to ensure no food or drink is wasted.",
+                        fontSize = 14.sp,
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(20.dp))
 

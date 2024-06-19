@@ -2,7 +2,6 @@ package bangkit.kiki.foodwisemobile.ui.inventory
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,6 +12,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Scaffold
@@ -41,6 +42,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -49,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemsIndexed
+import bangkit.kiki.foodwisemobile.R
 import bangkit.kiki.foodwisemobile.data.model.FoodItemModel
 import bangkit.kiki.foodwisemobile.ui.ViewModelFactory
 import bangkit.kiki.foodwisemobile.ui.element.BottomBar
@@ -176,33 +179,57 @@ fun InventoryPage(viewModel: InventoryViewModel, activity: ComponentActivity) {
             Spacer(modifier = Modifier.height(11.dp))
 
 
-            LazyColumn{
-                itemsIndexed(foodItems) { _, foodItem ->
-                    Log.d("foodItem", foodItem.toString())
-                    foodItem?.let {
-                        InventoryItem(
-                            id = it.id,
-                            name = it.name,
-                            expiryDate = it.expiredAt,
-                            quantity = it.quantity,
-                            measure = it.measure,
-                            unit = it.unit,
-                            showIconButton = selectedTabIndex == 0,
-                            onDeleteClick = {
-                                showDialog = true
-                                foodToDelete = foodItem
+            LazyColumn {
+                val itemCount = foodItems.itemCount
+                if (itemCount > 0) {
+                    itemsIndexed(foodItems) { _, foodItem ->
+                        foodItem?.let {
+                            InventoryItem(
+                                id = it.id,
+                                name = it.name,
+                                expiryDate = it.expiredAt,
+                                quantity = it.quantity,
+                                measure = it.measure,
+                                unit = it.unit,
+                                showIconButton = selectedTabIndex == 0,
+                                onDeleteClick = {
+                                    showDialog = true
+                                    foodToDelete = foodItem
+                                }
+                            )
+                        }
+                    }
+                } else if (foodItems.loadState.refresh is LoadState.NotLoading && itemCount == 0) {
+                    // Only show the empty state when there are no items and not currently loading
+                    item {
+                        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.align(Alignment.Center)) {
+
+                                Spacer(modifier = Modifier.height(64.dp))
+                                Image(
+                                    painter = painterResource(id = R.drawable.empty_item),
+                                    contentDescription = "No items available",
+                                    modifier = Modifier.size(220.dp)
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Text(
+                                    text = "No items available in this category",
+                                    style = TextStyle(
+                                        fontSize = 16.sp,
+                                        color = Color.Black,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                )
                             }
-                        )
+                        }
                     }
                 }
 
+
                 foodItems.apply {
                     when {
-//                        loadState.refresh is LoadState.Loading -> {
-//                            // Initial load
-//                            item { CircularProgressIndicator(modifier = Modifier.fillMaxWidth()) }
-//                        }
                         loadState.refresh is LoadState.Loading -> {
+                            //  Initial load
                             items(4) {
                                 LoadingInventoryItem()
                             }
@@ -213,7 +240,6 @@ fun InventoryPage(viewModel: InventoryViewModel, activity: ComponentActivity) {
                             items(3) {
                                 LoadingInventoryItem()
                             }
-//                            item { CircularProgressIndicator(modifier = Modifier.fillMaxWidth()) }
                         }
 
                         loadState.append is LoadState.Error -> {
