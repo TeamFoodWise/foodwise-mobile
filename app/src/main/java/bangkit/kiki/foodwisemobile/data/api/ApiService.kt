@@ -1,7 +1,7 @@
 package bangkit.kiki.foodwisemobile.data.api
 
 import bangkit.kiki.foodwisemobile.data.model.*
-import retrofit2.http.Bodyg
+import retrofit2.http.Body
 import retrofit2.http.GET
 import bangkit.kiki.foodwisemobile.data.dataClass.*
 import retrofit2.http.Header
