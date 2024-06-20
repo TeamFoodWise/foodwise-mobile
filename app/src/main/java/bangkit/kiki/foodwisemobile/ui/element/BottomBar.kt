@@ -6,15 +6,13 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Fastfood
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import bangkit.kiki.foodwisemobile.ui.theme.White
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LocalDining
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import bangkit.kiki.foodwisemobile.ui.freshness.FreshnessActivity
 import bangkit.kiki.foodwisemobile.ui.inventory.InventoryActivity
 import bangkit.kiki.foodwisemobile.ui.main.MainActivity
 import bangkit.kiki.foodwisemobile.ui.profile.ProfileActivity
@@ -65,6 +63,24 @@ fun BottomBar(currentPage: String) {
                 )
             },
             onClick = { context.startActivity(Intent(context, InventoryActivity::class.java)) }
+        )
+
+        BottomNavigationItem(
+            selected = currentPage.lowercase() == "freshness",
+            label = {
+                Text(
+                    "Freshness",
+                    style = TextStyle(color = if (currentPage.lowercase() == "freshness") Green else DarkGrey)
+                )
+            },
+            icon = {
+                Icon(
+                    Icons.Filled.Camera,
+                    contentDescription = "Freshness",
+                    tint = if (currentPage.lowercase() == "freshness") Green else DarkGrey
+                )
+            },
+            onClick = { context.startActivity(Intent(context, FreshnessActivity::class.java)) }
         )
 
         BottomNavigationItem(
