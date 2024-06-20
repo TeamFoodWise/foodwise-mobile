@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
@@ -70,8 +71,17 @@ fun RecipeRecommendationDetailPage(
     val isLoading by viewModel.isLoading.collectAsState()
     val recipe by viewModel.recipe.observeAsState()
 
-    val ingredientsString = recipe?.ingredients?.joinToString("\n") { "• $it" }
-    val stepsString = recipe?.steps?.joinToString("\n") { "• $it" }
+    fun String.capitalizeFirst(): String {
+        return this.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+    }
+
+    val ingredientsString = recipe?.ingredients?.joinToString("\n") {
+        "• ${it?.capitalizeFirst()}"
+    }
+    val stepsString = recipe?.steps?.joinToString("\n") {
+        "• ${it?.capitalizeFirst()}"
+    }
+
 
     LaunchedEffect(viewModel.isError) {
         viewModel.isError.observe(activity) { isError ->
@@ -92,63 +102,62 @@ fun RecipeRecommendationDetailPage(
                 CircularProgressIndicator()
             } else {
                 recipe?.let {
-                    Column(
+                    LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(innerPadding)
-                            .padding(16.dp)
+                            .padding(horizontal = 16.dp)
                     ) {
-                        recipe!!.name?.let {
+                        item {
+                            Spacer(modifier = Modifier.height(16.dp))
+
                             Text(
-                                text = it,
+                                text = it.name ?: "",
                                 color = Black,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 24.sp
                             )
-                        }
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.height(16.dp))
 
-                        Text(
-                            text = "Ingredients:",
-                            color = Black,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 16.sp
-                        )
-
-                        Spacer(modifier = Modifier.height(4.dp))
-
-                        if (ingredientsString != null) {
                             Text(
-                                text = ingredientsString,
+                                text = "Ingredients:",
                                 color = Black,
-                                fontSize = 16.sp,
-                                modifier = Modifier
-                                    .padding(horizontal = 8.dp)
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 16.sp
                             )
-                        }
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.height(4.dp))
 
-                        Column {
+                            ingredientsString?.let { ingredients ->
+                                Text(
+                                    text = ingredients,
+                                    color = Black,
+                                    fontSize = 16.sp,
+                                    modifier = Modifier.padding(horizontal = 8.dp)
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(16.dp))
+
                             Text(
                                 text = "How to make:",
                                 color = Black,
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 16.sp
                             )
-                        }
 
-                        Spacer(modifier = Modifier.height(4.dp))
+                            Spacer(modifier = Modifier.height(4.dp))
 
-                        if (stepsString != null) {
-                            Text(
-                                text = stepsString,
-                                color = Black,
-                                fontSize = 16.sp,
-                                modifier = Modifier
-                                    .padding(horizontal = 8.dp)
-                            )
+                            stepsString?.let { steps ->
+                                Text(
+                                    text = steps,
+                                    color = Black,
+                                    fontSize = 16.sp,
+                                    modifier = Modifier.padding(horizontal = 8.dp)
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(16.dp))
                         }
                     }
                 }
