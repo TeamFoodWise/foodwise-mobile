@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import bangkit.kiki.foodwisemobile.R
+import bangkit.kiki.foodwisemobile.data.model.RecipeRecommendationCardModel
 import bangkit.kiki.foodwisemobile.data.model.RecipeRecommendationModel
 import bangkit.kiki.foodwisemobile.ui.ViewModelFactory
 import bangkit.kiki.foodwisemobile.ui.element.BottomBar
@@ -102,10 +103,14 @@ fun RecipesRecommendationPage(viewModel: RecipesRecommendationViewModel, activit
                                 Spacer(modifier = Modifier.height(16.dp))
                                 recipe.id?.let {
                                     recipe.name?.let { it1 ->
-                                        RecipeRecommendationModel(
-                                            id = it,
-                                            name = it1,
-                                            ingredients = recipe.ingredients as List<String>
+                                        RecipeRecommendationCardModel(
+                                            recipe = RecipeRecommendationModel(
+                                                id = it,
+                                                name = it1,
+                                                ingredients = recipe.ingredients as List<String>
+                                            ),
+                                            position = index + 1,
+                                            totalRecommendation = recipes.size
                                         )
                                     }
                                 }?.let {

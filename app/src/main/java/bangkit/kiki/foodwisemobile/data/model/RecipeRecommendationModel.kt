@@ -6,9 +6,8 @@ data class RecipeRecommendationModel (
     val ingredients: List<String>
 )
 
-data class RecipeRecommendationDetailModel (
-    val id: Int,
-    val name: String,
-    val ingredients: List<String>,
-    val steps: List<String>
+data class RecipeRecommendationCardModel (
+    val recipe: RecipeRecommendationModel,
+    val position: Int,
+    val totalRecommendation: Int
 )
