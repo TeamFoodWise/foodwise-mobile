@@ -1,14 +1,18 @@
 package bangkit.kiki.foodwisemobile.ui.main.section
 
+import android.content.Intent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import bangkit.kiki.foodwisemobile.data.model.UserInventoryResponse
+import bangkit.kiki.foodwisemobile.ui.element.CustomButton
+import bangkit.kiki.foodwisemobile.ui.freshness.FreshnessActivity
 import bangkit.kiki.foodwisemobile.ui.main.component.CircularProgressBar
 import bangkit.kiki.foodwisemobile.ui.main.component.CustomLinearProgressIndicator
 import bangkit.kiki.foodwisemobile.ui.main.component.LineSpacer
@@ -21,12 +25,21 @@ fun InventoryStatisticsSection(
     statisticItems: List<Pair<String, Int>>,
     isLoading: Boolean
 ) {
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp),
     ) {
         LineSpacer()
+
+        CustomButton(
+            text = "Check item freshness",
+            onClick = { context.startActivity(Intent(context, FreshnessActivity::class.java)) }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         Text(
             text = "Inventory Statistics",
