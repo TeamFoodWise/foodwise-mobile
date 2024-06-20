@@ -2,7 +2,6 @@ package bangkit.kiki.foodwisemobile.ui.inventory
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -230,7 +229,7 @@ fun InventoryPage(viewModel: InventoryViewModel, activity: ComponentActivity) {
                 foodItems.apply {
                     when {
                         loadState.refresh is LoadState.Loading -> {
-                          //  Initial load
+                            //  Initial load
                             items(4) {
                                 LoadingInventoryItem()
                             }

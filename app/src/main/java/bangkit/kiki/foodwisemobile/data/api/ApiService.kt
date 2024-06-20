@@ -7,6 +7,7 @@ import bangkit.kiki.foodwisemobile.data.dataClass.*
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
@@ -35,6 +36,18 @@ interface ApiService {
         @Body request: UpdateProfileRequest
     ): UpdateProfileResponse
 
+    // Recipe Recommendation
+    @GET("${BASE_RECIPES_URL}recommendation")
+    suspend fun recipesRecommendation(
+        @Header("Authorization") token: String
+    ): RecipesRecommendationResponse
+
+    @GET("${BASE_RECIPES_URL}recommendation/{id}")
+    suspend fun recipeRecommendationDetail(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): RecipeRecommendationDetailResponse
+
     // Inventory
     @POST(BASE_ITEM_URL)
     suspend fun createItem(
@@ -61,5 +74,6 @@ interface ApiService {
         const val BASE_USER_URL = "api/users/"
         const val BASE_ITEM_URL = "api/items/"
         const val BASE_INVENTORY_URL = "api/consumptions/"
+        const val BASE_RECIPES_URL = "api/recipes/"
     }
 }

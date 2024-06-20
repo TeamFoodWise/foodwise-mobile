@@ -46,6 +46,7 @@ class ProfileActivity : ComponentActivity() {
     }
     private lateinit var userFullName: String
     private lateinit var userEmail: String
+    private lateinit var userAvatar: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +55,12 @@ class ProfileActivity : ComponentActivity() {
         viewModel.getSession().observe(this) { user ->
             userFullName = user.fullName
             userEmail = user.email
+
+            userAvatar = if (user.profileUrl != "") {
+                user.profileUrl
+            } else {
+                bangkit.kiki.foodwisemobile.util.AVATAR_DEFAULT
+            }
         }
 
         setContent {
@@ -65,6 +72,7 @@ class ProfileActivity : ComponentActivity() {
                     ProfilePage(
                         userFullName = userFullName,
                         userEmail = userEmail,
+                        userAvatar = userAvatar,
                         logoutOnClick = { viewModel.logout() }
                     )
                 }
@@ -74,7 +82,12 @@ class ProfileActivity : ComponentActivity() {
 }
 
 @Composable
-fun ProfilePage(userFullName: String, userEmail: String, logoutOnClick: suspend () -> Unit) {
+fun ProfilePage(
+    userFullName: String,
+    userEmail: String,
+    userAvatar: String,
+    logoutOnClick: suspend () -> Unit
+) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -88,9 +101,7 @@ fun ProfilePage(userFullName: String, userEmail: String, logoutOnClick: suspend 
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = rememberAsyncImagePainter(
-                    bangkit.kiki.foodwisemobile.util.AVATAR_DEFAULT
-                ),
+                painter = rememberAsyncImagePainter(userAvatar),
                 contentDescription = "Profile Picture",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -207,6 +218,11 @@ fun ProfilePage(userFullName: String, userEmail: String, logoutOnClick: suspend 
 @Composable
 fun DefaultPreview5() {
     FoodwiseMobileTheme {
-        ProfilePage(userFullName = "Test User", userEmail = "testuser@gmail.com", logoutOnClick = {  })
+        ProfilePage(
+            userFullName = "Test User",
+            userEmail = "testuser@gmail.com",
+            userAvatar = "",
+            logoutOnClick = {  }
+        )
     }
 }

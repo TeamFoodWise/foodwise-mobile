@@ -3,7 +3,6 @@ package bangkit.kiki.foodwisemobile.ui.editProfile
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -49,6 +48,7 @@ class EditProfileActivity : ComponentActivity() {
         ViewModelFactory.getInstance(this)
     }
     private lateinit var userFullName: String
+    private lateinit var userAvatar: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +56,12 @@ class EditProfileActivity : ComponentActivity() {
 
         viewModel.userSession.observe(this) { user ->
             userFullName = user.fullName
+
+            userAvatar = if (user.profileUrl != "") {
+                user.profileUrl
+            } else {
+                bangkit.kiki.foodwisemobile.util.AVATAR_DEFAULT
+            }
         }
 
         setContent {
@@ -66,6 +72,7 @@ class EditProfileActivity : ComponentActivity() {
                 ) {
                     EditProfilePage(
                         userFullName = userFullName,
+                        userAvatar = userAvatar,
                         viewModel = viewModel,
                         activity = this
                     )
@@ -76,7 +83,12 @@ class EditProfileActivity : ComponentActivity() {
 }
 
 @Composable
-fun EditProfilePage(userFullName: String, viewModel: EditProfileViewModel, activity: ComponentActivity) {
+fun EditProfilePage(
+    userFullName: String,
+    userAvatar: String,
+    viewModel: EditProfileViewModel,
+    activity: ComponentActivity
+) {
     var fullName by remember { mutableStateOf(userFullName) }
     var fullNameErrorMessage by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
@@ -117,9 +129,7 @@ fun EditProfilePage(userFullName: String, viewModel: EditProfileViewModel, activ
                 val painter = if (selectedImageUri != null) {
                     rememberAsyncImagePainter(model = selectedImageUri)
                 } else {
-                    rememberAsyncImagePainter(
-                        bangkit.kiki.foodwisemobile.util.AVATAR_DEFAULT
-                    )
+                    rememberAsyncImagePainter(userAvatar)
                 }
 
                 Image(
@@ -240,10 +250,8 @@ fun EditProfilePage(userFullName: String, viewModel: EditProfileViewModel, activ
                         confirmationNewPasswordErrorMessage == ""
                     ) {
                         if (fullName == userFullName && newPassword == "") {
-                            Log.e("EDIT_PROFILE_ACTIVITY", "Kok kesini")
                             Toast.makeText(activity, "No changes", Toast.LENGTH_SHORT).show()
                         } else {
-                            Log.e("EDIT_PROFILE_ACTIVITY", "Nah bener")
                             CoroutineScope(Dispatchers.Main).launch {
                                 val success = viewModel.updateProfile(
                                     fullName,

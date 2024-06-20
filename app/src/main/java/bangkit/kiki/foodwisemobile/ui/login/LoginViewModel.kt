@@ -40,6 +40,7 @@ class LoginViewModel(private val repository: UserRepository): ViewModel() {
                 val user = UserModel(
                     email = response.user.email,
                     fullName = response.user.fullName,
+                    profileUrl = response.user.profileUrl ?: "",
                     accessToken = response.accessToken,
                     refreshToken = response.refreshToken,
                     isLogin = true

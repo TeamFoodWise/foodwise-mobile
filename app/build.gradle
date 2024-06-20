@@ -21,6 +21,8 @@ android {
         versionCode 1
         versionName "1.0"
         buildConfigField "String", "BASE_URL", "\"${localProperties.getProperty('BASE_URL')}\""
+        buildConfigField "String", "SUPABASE_API_KEY", "\"${localProperties.getProperty('SUPABASE_API_KEY')}\""
+        buildConfigField "String", "SUPABASE_BUCKET_URL", "\"${localProperties.getProperty('SUPABASE_BUCKET_URL')}\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -78,6 +80,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
     implementation 'io.coil-kt:coil-compose:2.2.2'
+    implementation 'androidx.compose.runtime:runtime-livedata:1.0.0'
     implementation "androidx.paging:paging-runtime:3.1.1"
     implementation "androidx.paging:paging-compose:1.0.0-alpha18"
     testImplementation 'junit:junit:4.13.2'

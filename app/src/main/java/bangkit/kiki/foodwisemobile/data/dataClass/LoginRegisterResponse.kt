@@ -24,5 +24,8 @@ data class User(
 	val fullName: String? = null,
 
 	@field:SerializedName("email")
-	val email: String? = null
+	val email: String? = null,
+
+	@field:SerializedName("profile_url")
+	val profileUrl: String? = null
 ) : Parcelable
