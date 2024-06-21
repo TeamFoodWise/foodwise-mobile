@@ -6,7 +6,7 @@ Foodwise is a mobile application designed to address the critical issue of house
 ## Getting Started 📱
 
 1. Make sure your phone's android version is above 8.0 version (Android Oreo).
-2. Download from .apk file from this repository release section, or using this [link](https://github.com/ecoEase/foodwise-mobile/releases/tag/v1.0.0).
+2. Download from .apk file from this repository release section, or using this [link](https://github.com/TeamFoodWise/foodwise-mobile/releases/tag/v1.0.1).
 3. In order to use the food freshness detection feature, you need to give permission to access phone gallery.
 4. Don't forget to have proper internet connection so you don't have problem.
 
