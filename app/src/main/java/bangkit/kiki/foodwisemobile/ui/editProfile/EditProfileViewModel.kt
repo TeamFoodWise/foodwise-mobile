@@ -6,19 +6,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import bangkit.kiki.foodwisemobile.BuildConfig
 import bangkit.kiki.foodwisemobile.data.api.ApiConfig
-import bangkit.kiki.foodwisemobile.data.api.SupabaseApiConfig
 import bangkit.kiki.foodwisemobile.data.dataClass.ErrorResponse
-import bangkit.kiki.foodwisemobile.data.dataClass.UpdateProfileRequest
 import bangkit.kiki.foodwisemobile.data.model.UserModel
 import bangkit.kiki.foodwisemobile.data.repository.UserRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.HttpException
 import java.io.File
 import java.io.FileOutputStream
@@ -42,32 +40,49 @@ class EditProfileViewModel(private val repository: UserRepository): ViewModel() 
     suspend fun updateProfile(
         fullName: String,
         newPassword: String,
-        confirmationNewPassword: String
+        confirmationNewPassword: String,
+        imageUri: Uri?,
+        context: Context
     ): Boolean {
         val currentUser = _userSession.value
         _isLoading.value = true
         _isError.value = false
 
+        val fullNameReqBody = fullName.toRequestBody("text/plain".toMediaType())
+        val newPasswordReqBody = newPassword.toRequestBody("text/plain".toMediaType())
+        val confirmationNewPasswordReqBody = confirmationNewPassword.toRequestBody("text/plain".toMediaType())
+
+        var multipartBody: MultipartBody.Part? = null
+        if (imageUri != null) {
+            val imageFile = uriToFile(imageUri, context)
+            val imageFileReqBody = imageFile.asRequestBody("image/jpeg".toMediaType())
+            multipartBody = MultipartBody.Part.createFormData(
+                "file",
+                imageFile.name,
+                imageFileReqBody
+            )
+        }
+
         try {
-            val response = ApiConfig.getApiService().updateProfile(
+            val response = ApiConfig.getApiService().newUpdateProfile(
                 token = "Bearer ${repository.getAccessToken()}",
-                UpdateProfileRequest(
-                    fullName,
-                    newPassword,
-                    confirmationNewPassword
-                )
+                file = multipartBody,
+                fullName = fullNameReqBody,
+                newPassword = newPasswordReqBody,
+                confirmationNewPassword = confirmationNewPasswordReqBody
             )
 
             if (
                 response.message !== null &&
                 response.user?.fullName != null &&
                 response.user.email != null &&
+                response.user.profileUrl != null &&
                 currentUser != null
             ) {
                 val updatedUser = UserModel(
                     email = currentUser.email,
                     fullName = fullName,
-                    profileUrl = "",
+                    profileUrl = response.user.profileUrl,
                     accessToken = currentUser.accessToken,
                     refreshToken = currentUser.refreshToken,
                     isLogin = true
@@ -93,24 +108,6 @@ class EditProfileViewModel(private val repository: UserRepository): ViewModel() 
         }
 
         return false
-    }
-
-    private suspend fun uploadImageToSupabase(uri: Uri, context: Context): String {
-        val file = uriToFile(uri, context)
-        val requestBody = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
-        val multipartBody = MultipartBody.Part.createFormData(
-            "file",
-            file.name,
-            requestBody
-        )
-
-        return try {
-            SupabaseApiConfig.getApiService().uploadFile(file = multipartBody)
-
-            "${BuildConfig.SUPABASE_BUCKET_URL}/${file.name}"
-        } catch (error: HttpException) {
-            ""
-        }
     }
 
     private fun uriToFile(imageUri: Uri, context: Context): File {
