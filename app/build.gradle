@@ -21,8 +21,6 @@ android {
         versionCode 1
         versionName "1.0"
         buildConfigField "String", "BASE_URL", "\"${localProperties.getProperty('BASE_URL')}\""
-        buildConfigField "String", "SUPABASE_API_KEY", "\"${localProperties.getProperty('SUPABASE_API_KEY')}\""
-        buildConfigField "String", "SUPABASE_BUCKET_URL", "\"${localProperties.getProperty('SUPABASE_BUCKET_URL')}\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

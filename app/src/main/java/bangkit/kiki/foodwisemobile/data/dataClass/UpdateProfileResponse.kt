@@ -11,5 +11,8 @@ data class UpdateProfileResponse(
 	val message: String? = null,
 
 	@field:SerializedName("user")
-	val user: User? = null
+	val user: User? = null,
+
+	@field:SerializedName("profile_url")
+	val profileUrl: User? = null
 ) : Parcelable

@@ -249,14 +249,16 @@ fun EditProfilePage(
                         newPasswordErrorMessage == "" &&
                         confirmationNewPasswordErrorMessage == ""
                     ) {
-                        if (fullName == userFullName && newPassword == "") {
+                        if (fullName == userFullName && newPassword == "" && selectedImageUri == null) {
                             Toast.makeText(activity, "No changes", Toast.LENGTH_SHORT).show()
                         } else {
                             CoroutineScope(Dispatchers.Main).launch {
                                 val success = viewModel.updateProfile(
                                     fullName,
                                     newPassword,
-                                    confirmationNewPassword
+                                    confirmationNewPassword,
+                                    selectedImageUri,
+                                    context
                                 )
 
                                 if (success) {
