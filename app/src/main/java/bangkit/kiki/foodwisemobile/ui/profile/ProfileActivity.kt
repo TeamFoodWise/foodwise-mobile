@@ -44,9 +44,9 @@ class ProfileActivity : ComponentActivity() {
     private val viewModel by viewModels<ProfileViewModel> {
         ViewModelFactory.getInstance(this)
     }
-    private lateinit var userFullName: String
-    private lateinit var userEmail: String
-    private lateinit var userAvatar: String
+    private var userFullName: String = ""
+    private var userEmail: String = ""
+    private var userAvatar: String  = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

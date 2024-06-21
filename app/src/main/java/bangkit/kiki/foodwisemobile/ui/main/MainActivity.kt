@@ -122,12 +122,3 @@ fun HomePage(
         }
     }
 }
-
-
-//@Preview(showBackground = true)
-//@Composable
-//fun DefaultPreview() {
-//    FoodwiseMobileTheme {
-//        HomePage()
-//    }
-//}

@@ -47,8 +47,8 @@ class EditProfileActivity : ComponentActivity() {
     private val viewModel by viewModels<EditProfileViewModel> {
         ViewModelFactory.getInstance(this)
     }
-    private lateinit var userFullName: String
-    private lateinit var userAvatar: String
+    private var userFullName: String = ""
+    private var userAvatar: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -249,14 +249,16 @@ fun EditProfilePage(
                         newPasswordErrorMessage == "" &&
                         confirmationNewPasswordErrorMessage == ""
                     ) {
-                        if (fullName == userFullName && newPassword == "") {
+                        if (fullName == userFullName && newPassword == "" && selectedImageUri == null) {
                             Toast.makeText(activity, "No changes", Toast.LENGTH_SHORT).show()
                         } else {
                             CoroutineScope(Dispatchers.Main).launch {
                                 val success = viewModel.updateProfile(
                                     fullName,
                                     newPassword,
-                                    confirmationNewPassword
+                                    confirmationNewPassword,
+                                    selectedImageUri,
+                                    context
                                 )
 
                                 if (success) {

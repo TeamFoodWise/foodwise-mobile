@@ -4,9 +4,12 @@ import bangkit.kiki.foodwisemobile.data.model.*
 import retrofit2.http.Body
 import retrofit2.http.GET
 import bangkit.kiki.foodwisemobile.data.dataClass.*
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.POST
-import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -30,10 +33,14 @@ interface ApiService {
     suspend fun getExpiringSoon(@Header("Authorization") token: String): ExpiringFoodResponse
 
     //  Profile
-    @PUT("${BASE_AUTH_URL}update-profile")
-    suspend fun updateProfile(
+    @Multipart
+    @POST("${BASE_AUTH_URL}new-update-profile")
+    suspend fun newUpdateProfile(
         @Header("Authorization") token: String,
-        @Body request: UpdateProfileRequest
+        @Part file: MultipartBody.Part?,
+        @Part("full_name") fullName: RequestBody,
+        @Part("new_password") newPassword: RequestBody,
+        @Part("confirmation_new_password") confirmationNewPassword: RequestBody
     ): UpdateProfileResponse
 
     // Recipe Recommendation

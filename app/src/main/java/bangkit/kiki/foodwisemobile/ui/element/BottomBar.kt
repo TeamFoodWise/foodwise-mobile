@@ -6,13 +6,10 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Fastfood
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import bangkit.kiki.foodwisemobile.ui.theme.White
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LocalDining
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import bangkit.kiki.foodwisemobile.ui.inventory.InventoryActivity
