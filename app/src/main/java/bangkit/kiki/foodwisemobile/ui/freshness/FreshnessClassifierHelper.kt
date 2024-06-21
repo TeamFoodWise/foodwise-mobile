@@ -9,6 +9,7 @@ import android.os.SystemClock
 import android.provider.MediaStore
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.common.ops.CastOp
+import org.tensorflow.lite.support.common.ops.NormalizeOp
 import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
@@ -17,7 +18,7 @@ import org.tensorflow.lite.task.vision.classifier.Classifications
 import org.tensorflow.lite.task.vision.classifier.ImageClassifier
 
 class ImageClassifierHelper(
-    private val modelName: String = "cancer_classification.tflite",
+    private val modelName: String = "model_with_metadata.tflite",
     private val context: Context,
     private val classifierListener: ClassifierListener?
 ) {
@@ -60,7 +61,7 @@ class ImageClassifierHelper(
 
         val imageProcessor = ImageProcessor.Builder()
             .add(ResizeOp(224, 224, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR))
-            .add(CastOp(DataType.UINT8))
+            .add(CastOp(DataType.FLOAT32))
             .build()
 
         val imageBitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {

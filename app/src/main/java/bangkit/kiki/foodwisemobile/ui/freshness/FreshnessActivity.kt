@@ -2,6 +2,7 @@ package bangkit.kiki.foodwisemobile.ui.freshness
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -75,6 +76,9 @@ fun FreshnessCalculatorPage(activity: ComponentActivity) {
                         val sortedCategories = it[0].categories.sortedByDescending { it?.score }
                         val topCategory = sortedCategories[0]
                         result = NumberFormat.getPercentInstance().format(topCategory.score)
+                        Log.e("FRESHNESS_ACTIVITY", topCategory.score.toString())
+                        Log.e("FRESHNESS_ACTIVITY", topCategory.label)
+                        Log.e("FRESHNESS_ACTIVITY", topCategory.displayName)
                     } else {
                         Toast.makeText(activity, "Failed to predict", Toast.LENGTH_SHORT).show()
                     }
